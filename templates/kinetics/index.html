@@ -15,7 +15,7 @@
     <ul>
     {% for family in families_list %}
 		<a href="{% url kinetics.views.family family_name=family.name %}">
-        <li>{{ family }}</li>
+        <li>{{ family.number }} - {{ family.name }}</li>
 </a>
     {% endfor %}
     </ul>

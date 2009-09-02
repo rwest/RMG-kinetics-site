@@ -29,4 +29,7 @@ def rate(request, family_name, rate_id):
         raise Http404
     family.load()
     rate = family.getRate(rate_id)
-    return render_to_response('kinetics/rate.html', {'family': family, 'rate': rate})
+    comment_list = family.getCommentList()
+    comment = comment_list[rate_id.strip('.')]
+    return render_to_response('kinetics/rate.html',
+        {'family': family, 'rate': rate, 'comment': comment})

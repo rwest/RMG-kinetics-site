@@ -21,7 +21,7 @@ def removeCommentFromLine(line):
 
 class Rate():
     import re
-    _Trange_re = re.compile('^[0-9\-.]*$')
+    __re_Trange = re.compile('^[0-9\-.]*$')
     def __init__(self,line=None):
         self.line=line
         if line: 
@@ -33,10 +33,42 @@ class Rate():
         self.id = tokens.pop(0)
         self.groups=[]
         # while it's not a T-range, it's a group
-        while not Rate._Trange_re.match(tokens[0]):
+        while not self.__re_Trange.match(tokens[0]):
             self.groups.append(tokens.pop(0))
         self.Trange = tokens.pop(0)
-    
+
+class Comment():
+    def __init__(self):
+        self.id=None
+
+class CommentList():
+    import re
+    __re_commentID = re.compile('^(\d+):\s+(.*)')
+    def __init__(self,path):
+        """Lazy - does not load data until needed"""
+        self.path = path
+        self.comments_dict = dict()
+    def load(self):
+        comment_file = file(self.path)
+        for line in comment_file:
+            match = self.__re_commentID.match(line)
+            if match:
+                comment_id = match.group(1)
+                line = match.group(2)
+                self.comments_dict[comment_id] = ''
+            if line[0]=='\t': # remove the first tab
+                line = line[1:]
+            self.comments_dict[comment_id] += line
+    def get_comment_by_id(self, comment_id):
+        """Get a comment by its id (like a dictionary). 
+         Loads the data first if required. Returns '' if no comment."""
+        if not self.comments_dict:
+            self.load()
+        try:
+            return self.comments_dict[comment_id]
+        except KeyError:
+            return ''
+    __getitem__ = get_comment_by_id
     
 class Family():
     """A reaction family."""
@@ -47,6 +79,7 @@ class Family():
         self.rates_dict={}
         self.reaction=''
         self.unread = ''
+        self._comment_list = None
     def __repr__(self):
         return "Family(%s)"%(self.path)
     def path_to(self,relativepath):
@@ -61,9 +94,13 @@ class Family():
                 self.rates_dict[rate.id] = rate
             else:
                self.unread += line
-            
     def getRate(self, rate_id):
         return self.rates_dict[rate_id]
+        
+    def getCommentList(self):
+        if not self._comment_list:
+            self._comment_list = CommentList(self.path_to('comments.txt'))
+        return self._comment_list
         
         
 class FamiliesList():
