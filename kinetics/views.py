@@ -32,7 +32,7 @@ def rate(request, family_name, rate_id):
     rate = family.getRate(rate_id)
     rates_for_table = [rate]
     comment_list = family.getCommentList()
-    general_comment = comment_list['General']
+    general_comment = comment_list['General'].strip()
     comment = comment_list[rate_id]
     return render_to_response('kinetics/rate.html', locals() )
        # {'family': family, 'rate': rate, 'comment': comment, 'general_comment': general_comment})

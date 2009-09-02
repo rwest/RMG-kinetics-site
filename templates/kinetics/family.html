@@ -9,20 +9,26 @@ Kinetics</a>: {{ family.name }}{% endblock %}
 <h2>
 {{ family.reaction }}
 </h2>
+{% if family.reverse %}
 Reverse name: {{ family.reverse }}
+{% endif %}
 
 <p>
 Actions:
 <pre>{{ family.actions }}</pre>
 </p>
 
-<h2>Rates:</h2>
+{% block above_table %}
+<a href="{% url kinetics.views.comments family_name=family.name %}">View entire comments file.</a>
+{% endblock %}
 
+{% block table_heading %}<h2>Rates:</h2>{% endblock %}
 {% include 'kinetics/table.html' %}
 
+{% block below_table %}{% endblock %}
 
 {% block comments %}
-<h2>Couldn't read these lines from rateLibrary.txt:</h2>
+<h2>These lines in rateLibrary.txt were not interpreted as rates:</h2>
 <div style="width:80%; overflow: auto; background-color: #eee;">
 <pre>
 {{ family.unread }}
