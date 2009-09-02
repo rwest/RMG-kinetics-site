@@ -15,21 +15,34 @@ def index(request):
     return render_to_response('kinetics/index.html', {'families_list': families_list})
 
 def family(request, family_name):
-    
+    """A reaction family"""
     family = db.getFamily(family_name)
     if family is None:
         raise Http404
     family.load()
-    
-    return render_to_response('kinetics/family.html', {'family': family})
+    rates_for_table = family.rates
+    return render_to_response('kinetics/family.html', locals() )
     
 def rate(request, family_name, rate_id):
+    """THe details of a reaction rate."""
     family = db.getFamily(family_name)
     if family is None:
         raise Http404
     family.load()
     rate = family.getRate(rate_id)
+    rates_for_table = [rate]
     comment_list = family.getCommentList()
-    comment = comment_list[rate_id.strip('.')]
-    return render_to_response('kinetics/rate.html',
-        {'family': family, 'rate': rate, 'comment': comment})
+    general_comment = comment_list['General']
+    comment = comment_list[rate_id]
+    return render_to_response('kinetics/rate.html', locals() )
+       # {'family': family, 'rate': rate, 'comment': comment, 'general_comment': general_comment})
+
+def comments(request, family_name):
+    family = db.getFamily(family_name)
+    comments = file(family.path_to('comments.rst')).read()
+    return render_to_response('kinetics/comments.html',
+        {'family': family,'comments': comments})
+
+def convert(request):
+    db.convert_comments_to_rST()
+    return HttpResponse("Converted all comments.txt files to comments.rst files")

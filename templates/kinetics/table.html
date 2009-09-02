@@ -1,0 +1,44 @@
+<table border=1>
+<th>Number</th>
+<th colspan="{{ family.rates.1.groups|length }}">Groups</th>
+<th>T range</th>	
+<th>A</th>
+<th>n</th>
+<th>alpha</th>
+<th>E0</th>
+<th>Comment</th>
+</tr>
+{% for rate in rates_for_table %}
+    <tr>
+	<td>
+<a href="{% url kinetics.views.rate family_name=family.name rate_id=rate.id %}">
+	{{ rate.id }}
+</a>
+</td>
+{% for group in rate.groups %}
+<td>{{ group }} </td>
+{% endfor %}
+<td> {{ rate.Trange }}
+</td>
+<td>
+<span class="value">{{ rate.A }}</span>
+<span class="uncertainty">+/- {{ rate.DA }}</span>
+</td>
+<td>
+<span class="value">{{ rate.n }}</span>
+<span class="uncertainty">+/- {{ rate.Dn }}</span>
+</td>
+<td>
+<span class="value">{{ rate.alpha }}</span>
+<span class="uncertainty">+/- {{ rate.Dalpha }}</span>
+</td>
+<td>
+<span class="value">{{ rate.E0 }}</span>
+<span class="uncertainty">+- {{ rate.DE0 }}</span>
+</td>
+<td>
+{{ rate.comment }}
+</td>
+</tr>
+{% endfor %}
+</table>

@@ -3,9 +3,11 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns('mysite.kinetics.views',
 
     (r'^$', 'index'),
+    (r'^convert$', 'convert'),
     (r'^(?P<family_name>[^/]+)/$', 'family'),
-    (r'^(?P<family_name>[^/]+)/(?P<rate_id>[^/]+)/$', 'rate')
-    
+    (r'^(?P<family_name>[^/]+)/comments/$', 'comments'),
+    (r'^(?P<family_name>[^/]+)/(?P<rate_id>[^/]+)/$', 'rate'),
+
     # Example:
     # (r'^mysite/', include('mysite.foo.urls')),
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
