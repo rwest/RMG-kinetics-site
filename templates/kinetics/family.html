@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>family</title>
+	<meta name="generator" content="TextMate http://macromates.com/">
+	<meta name="author" content="Richard West">
+	<!-- Date: 2009-09-01 -->
+</head>
+<body>
+<h1>{{ family.name }}</h1>
+<pre>
+{{ family.reaction }}
+</pre>
+
+<h2>Rates:</h2>
+<ul>
+{% for rate in family.rates %}
+    <li>
+<a href="{% url kinetics.views.rate family_name=family.name rate_id=rate.id %}">
+	{{ rate.id }}
+</a>
+{% for group in rate.groups %}
+	{{ group }}
+{% endfor %}
+</li>
+{% endfor %}
+</ul>
+
+<h2>Couldn't read these lines from rateLibrary.txt:</h2>
+<pre>
+{{ family.unread }}
+</pre>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>index</title>
+	<meta name="generator" content="TextMate http://macromates.com/">
+	<meta name="author" content="Richard West">
+	<!-- Date: 2009-09-01 -->
+</head>
+<body>
+
+{% if families_list %}
+    <ul>
+    {% for family in families_list %}
+		<a href="{% url kinetics.views.family family_name=family.name %}">
+        <li>{{ family }}</li>
+</a>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No families are available.</p>
+{% endif %}
+
+</body>
+</html>
