@@ -1,7 +1,8 @@
 from django.conf.urls.defaults import *
+import os
+from django.conf import settings
 
 urlpatterns = patterns('RMG_site.kinetics.views',
-
     (r'^$', 'index'),
     (r'^convert$', 'convert'),
     (r'^(?P<family_name>[^/]+)/$', 'family'),
@@ -16,3 +17,10 @@ urlpatterns = patterns('RMG_site.kinetics.views',
     # Uncomment the next line to enable the admin:
     # (r'^admin/', include(admin.site.urls)),
 )
+
+if settings.DEBUG: # not being served by Apache, serve it by Django
+    urlpatterns += patterns('',
+        (r'^media/(.*)$', 'django.views.static.serve',
+            {'document_root': os.path.join(settings.PROJECT_PATH, 'kinetics', 'media')}
+        ),
+    )
