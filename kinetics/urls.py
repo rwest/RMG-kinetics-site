@@ -1,12 +1,10 @@
 from django.conf.urls.defaults import *
-import os
-from django.conf import settings
 
 urlpatterns = patterns('RMG_site.kinetics.views',
-    (r'^$', 'index'),
-    (r'^convert$', 'convert'),
-    (r'^(?P<family_name>[^/]+)/$', 'family'),
-    (r'^(?P<family_name>[^/]+)/comments/$', 'comments'),
+    (r'^$',                                     'index'),
+    (r'^convert$',                              'convert'),
+    (r'^(?P<family_name>[^/]+)/$',              'family'),
+    (r'^(?P<family_name>[^/]+)/comments/$',     'comments'),
     (r'^(?P<family_name>[^/]+)/(?P<rate_id>[^/]+)/$', 'rate'),
 
     # Example:
@@ -18,9 +16,12 @@ urlpatterns = patterns('RMG_site.kinetics.views',
     # (r'^admin/', include(admin.site.urls)),
 )
 
+import os
+from django.conf import settings
 if settings.DEBUG: # not being served by Apache, serve it by Django
     urlpatterns += patterns('',
         (r'^media/(.*)$', 'django.views.static.serve',
-            {'document_root': os.path.join(settings.PROJECT_PATH, 'kinetics', 'media')}
+            {'document_root': os.path.join(settings.PROJECT_PATH, 'kinetics', 'media'),
+            'show_indexes': True,}
         ),
     )
