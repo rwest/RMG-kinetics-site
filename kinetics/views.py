@@ -4,14 +4,18 @@ from django.template import Context, loader
 from django.shortcuts import render_to_response
 
 #from mysite.kinetics import *
-
+from django.conf import settings
+import os
 import RMG_site.kinetics.database
-db = RMG_site.kinetics.database.Database('RMG_Database/kinetics')
+db = RMG_site.kinetics.database.Database(
+    os.path.join(settings.PROJECT_PATH,'RMG_Database','kinetics') )
 
 def index(request):
     """The index - list of families"""
+    #import os
+    #return HttpResponse(settings.PROJECT_PATH + '\n'+os.getcwd())
+    
     families_list = db.getFamiliesList()
-
     return render_to_response('kinetics/index.html', {'families_list': families_list})
 
 def family(request, family_name):
