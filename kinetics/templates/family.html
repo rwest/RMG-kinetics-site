@@ -1,4 +1,4 @@
-{% extends "kinetics/base.html" %}
+{% extends "rmg_base.html" %}
 
 {% block title %}Kinetics: {{ family.name }}{% endblock %}
 {% block page_heading %}<a href="{% url kinetics.views.index %}">
@@ -23,7 +23,7 @@ Actions:
 {% endblock %}
 
 {% block table_heading %}<h2>Rates:</h2>{% endblock %}
-{% include 'kinetics/table.html' %}
+{% include 'table.html' %}
 
 {% block below_table %}{% endblock %}
 
