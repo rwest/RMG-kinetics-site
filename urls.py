@@ -5,7 +5,7 @@ from django.conf.urls.defaults import *
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^kinetics/', include('mysite.kinetics.urls')),
+    (r'^kinetics/', include('RMG_site.kinetics.urls')),
     
     # Example:
     # (r'^mysite/', include('mysite.foo.urls')),

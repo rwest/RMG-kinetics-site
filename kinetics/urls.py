@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('mysite.kinetics.views',
+urlpatterns = patterns('RMG_site.kinetics.views',
 
     (r'^$', 'index'),
     (r'^convert$', 'convert'),

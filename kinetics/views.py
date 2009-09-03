@@ -5,8 +5,8 @@ from django.shortcuts import render_to_response
 
 #from mysite.kinetics import *
 
-import mysite.kinetics.database
-db = mysite.kinetics.database.Database('RMG_Database/kinetics')
+import RMG_site.kinetics.database
+db = RMG_site.kinetics.database.Database('RMG_Database/kinetics')
 
 def index(request):
     """The index - list of families"""
