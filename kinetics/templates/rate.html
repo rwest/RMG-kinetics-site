@@ -25,17 +25,29 @@
 <h3>Group definitions:</h3>
 <table class="groups">
   <tr>
+      {% for group in groups %}
+      <th> {{ group.name }} </th>
+      {% endfor %}
+      </tr>
+     <tr>
+      
     {% for group in groups %}
     <td>
-        <div style="padding-left: 0em;">
+        Ancestors in tree:
+        <div class="tree_node" style="margin-left: 0em;">
         {% for ancestor in group.ancestors %}
-            {{ ancestor }}
+            {{ ancestor }} 
             </div>
-            <div style="padding-left: {{ forloop.counter }}em;">
+            <div class="tree_node" style="margin-left: {{ forloop.counter }}em;">
         {% endfor %}
     <span class="main_group">{{ group.name }}</span>
     </div>
-    <div class="group_definition">
+    </td>
+    {% endfor %}
+  </tr>
+  <tr>{% for group in groups %}
+    <td class="group_definition">
+    Group definition:
     <pre>{{ group.definition }}</pre>
     </div>
     </td>
