@@ -95,3 +95,6 @@ INSTALLED_APPS = (
     'django.contrib.markup',
     'RMG_site.kinetics', # must be here to have template loaded automatically
 )
+
+
+

@@ -1,12 +1,12 @@
 {% extends "index.html" %}
+
 {% block title %}Kinetics: {{ family.name }}: Comments{% endblock %}
-{% block page_heading %}<a href="{% url kinetics.views.index %}">
+{% block page_heading %}<a href="{{ url('kinetics.views.index') }}">
 Kinetics</a>: {{ family.name }}: Comments{% endblock %}
 
 {% block page_body %}
 
-{% load markup %}
-{{ comments|restructuredtext }}
+{{ comments|rst }}
 
 <hr>
 <span class="aside">Comments formatted using 

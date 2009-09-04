@@ -1,7 +1,35 @@
 # Create your views here.
 from django.http import HttpResponse, Http404
 from django.template import Context, loader
-from django.shortcuts import render_to_response
+
+# from django.conf import settings
+# # from django.shortcuts import render_to_response
+# # use the jinja2 templating engine instead of django's default
+# from jinja2 import FileSystemLoader, Environment, ChoiceLoader, PackageLoader
+# #template_dirs = getattr(settings,'TEMPLATE_DIRS')
+# default_mimetype = getattr(settings, 'DEFAULT_CONTENT_TYPE')
+# #env = Environment(loader=FileSystemLoader(template_dirs))
+# #env = Environment(loader = PrefixLoader({
+# #    'kinetics':     PackageLoader('RMG_site.kinetics'),
+# #    '':     FileSystemLoader(settings.TEMPLATE_DIRS)
+# #    })
+# env = Environment(loader = ChoiceLoader([
+#         PackageLoader('RMG_site.kinetics'),
+#         FileSystemLoader(settings.TEMPLATE_DIRS)
+#     ]) )
+#     
+
+import django_jinja
+from django_jinja import *
+from django_jinja import url
+django_jinja.env.globals['url'] = django_jinja.url.url
+
+#
+#def render_to_response(filename, context={},mimetype=default_mimetype):
+#    template = env.get_template(filename)
+#    rendered = template.render(**context)
+#    return HttpResponse(rendered,mimetype=mimetype)
+#
 
 #from mysite.kinetics import *
 from django.conf import settings

@@ -6,14 +6,14 @@
 
 {% block extrahead %}<link rel="stylesheet" href="/kinetics/media/kinetics.css" type="text/css">{% endblock %}
 
-{% block navbar_items %}<li><a href="{% url kinetics.views.index %}">Kinetics</a> &raquo;</li>{% endblock %}
+{% block navbar_items %}<li><a href="{{ url( 'kinetics.views.index') }}">Kinetics</a> &raquo;</li>{% endblock %}
 
 {% block page_body %}
 {% if families_list %}
     <ol>
     {% for family in families_list %}
     <li>{#{ family.number }#} 
-	<a href="{% url kinetics.views.family family_name=family.name %}"> {{ family.name }}</a>
+	<a href="{{ url( 'kinetics.views.index', family_name=family.name) }}"> {{ family.name }}</a>
 	{% with family.rates|length as nrates %}
 	({{ nrates }} rate{{ nrates|pluralize }}{% ifequal family.onoff 'off' %}; turned off by default{% endifequal %})
 	{% endwith %}

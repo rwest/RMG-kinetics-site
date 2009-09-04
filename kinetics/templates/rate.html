@@ -4,7 +4,7 @@
 {% block title %}Kinetics: {{ family.name }}: {{ rate.id }}{% endblock %}
 
 {% block page_heading %}
-<a href="{% url kinetics.views.family family_name=family.name %}">{{ family.name }}</a> rate
+<a href="{{ url( 'kinetics.views.index', family_name=family.name) }}">{{ family.name }}</a> rate
  {{ rate.id }}{% endblock %}
 
 {% block reaction_definition %}

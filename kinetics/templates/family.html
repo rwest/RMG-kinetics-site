@@ -3,11 +3,11 @@
 {% block title %}RMG Kinetics: {{ family.name }}{% endblock %}
 
 {% block navbar_items %}
-<li><a href="/kinetics/">Kinetics</a> &raquo;</li>
-<li><a href="{% url kinetics.views.family family_name=family.name %}">{{ family.name }}</a>&raquo;</li>
+<li><a href="{{ url( 'kinetics.views.index') }}">Kinetics</a> &raquo;</li>
+<li><a href="{{ url( 'kinetics.views.index', family_name=family.name) }}">{{ family.name }}</a>&raquo;</li>
 {% endblock %}
 
-{% block page_heading %}<a href="{% url kinetics.views.family family_name=family.name %}">{{ family.name }}</a>{% endblock %}
+{% block page_heading %}<a href="{{ url( 'kinetics.views.index', family_name=family.name) }}">{{ family.name }}</a>{% endblock %}
 
 {% block page_body %}
 
@@ -26,7 +26,7 @@ Actions:
 </p>
 
 {% block above_table %}
-<a href="{% url kinetics.views.comments family_name=family.name %}">View entire comments file.</a>
+<a href="{{ url( 'kinetics.views.comments', family_name=family.name) }}">View entire comments file.</a>
 {% endblock %}
 
 {% block table_heading %}<h2>Rates:</h2>{% endblock %}

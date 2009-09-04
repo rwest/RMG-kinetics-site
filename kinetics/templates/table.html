@@ -12,7 +12,7 @@
 {% for rate in rates_for_table %}
 <tr>
 <th class="value">
-<a href="{% url kinetics.views.rate family_name=family.name rate_id=rate.id %}">
+<a href="{{ url( 'kinetics.views.index', family_name=family.name, rate_id=rate.id) }}">
 {{ rate.id }}
 </a>
 </td>
