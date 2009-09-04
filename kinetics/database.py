@@ -9,6 +9,22 @@ Copyright (c) 2009 MIT. All rights reserved.
 import sys
 import os
 import unittest
+from django.conf import settings
+# fire up the big guns
+sys.path.append(settings.RMG_PATH)
+import rmg
+
+def loadKineticsDatabases(databasePath, only_families=False):
+	"""
+	Create and load the kinetics databases (reaction families).
+	If only_families is a list like ['H_Abstraction'] then only families in this
+	list will be loaded.
+	
+	Currently incompatible with RMG(java) database syntax.
+	"""
+	rmg.reaction.kineticsDatabase = rmg.reaction.ReactionFamilySet()
+	rmg.reaction.kineticsDatabase.load(databasePath, only_families=only_families)
+	
 
 def removeCommentFromLine(line):
 	"""
@@ -53,9 +69,13 @@ class CommentList():
         """Lazy - does not load data until needed"""
         self.path = path
         self.comments_dict = dict()
+        self.load()
     def load(self):
         comment_id = 'General' #mops up comments before the first rate ID
         self.comments_dict[comment_id] = ''
+        if not os.path.exists(self.path):
+            self.comments_dict[comment_id] = "No comments file"
+            return 
         comment_file = file(self.path)
         for line in comment_file:
             match = self.__re_underline.match(line)
@@ -80,22 +100,26 @@ class CommentList():
     
 class Family():
     """A reaction family."""
-    def __init__(self,path):
+    def __init__(self, path, load_now=True):
         self.path = path
         self.name = os.path.split(path)[1]
-        self.rates=[]
-        self.rates_dict={}
-        self.reaction=''
-        self.reverse=''
-        self.unread = ''
-        self.actions = ''
-        self._comment_list = None
+        if load_now: self.load() 
     def __repr__(self):
         return "Family(%s)"%(self.path)
     def path_to(self,relativepath):
         return os.path.join(self.path,relativepath)
     def load(self):
+        """Load all the stuff"""
+        self.load_template()
+        self.load_library()
+        self.load_dictionary()
+        self.load_tree()
+        self.load_comment_list()
+    def load_template(self):
         import re
+        self.reaction=''
+        self.reverse=''
+        self.actions = ''
         for line in file(self.path_to('reactionAdjList.txt')):
             shortline = removeCommentFromLine(line).strip()
             if not shortline:
@@ -109,7 +133,10 @@ class Family():
             if not re.match('^\(\d+\)\s+',shortline):
                 continue # not an action
             self.actions+=shortline+'\n'
-        
+    def load_library(self):
+        self.rates=[]
+        self.unread=''
+        self.rates_dict={}
         for line in file(self.path_to('rateLibrary.txt')):
             shortline = removeCommentFromLine(line).strip()
             if len(shortline.split()) > 11:
@@ -117,28 +144,40 @@ class Family():
                 self.rates.append(rate)
                 self.rates_dict[rate.id] = rate
             else:
-               self.unread += line
-    def getRate(self, rate_id):
+                self.unread += line   
+    def load_dictionary(self):
+        import rmg
+        dd=rmg.data.Dictionary()
+        dd.load(self.path_to('dictionary.txt'))
+        self.dictionary = dd 
+    def load_tree(self):
+        import rmg
+        tt = rmg.data.Tree()
+        tt.load(self.path_to('tree.txt'))
+        self.tree = tt
+    def load_comment_list(self):
+        self.comment_list = CommentList(self.path_to('comments.rst'))
+        
+    def get_rate(self, rate_id):
         return self.rates_dict[rate_id]
-        
-    def getCommentList(self):
-        if not self._comment_list:
-            self._comment_list = CommentList(self.path_to('comments.rst'))
-        return self._comment_list
-        
+    def get_comment(self, rate_id):
+        return self.comment_list[rate_id]
+    def get_group(self, group_id):
+        return self.dictionary[group_id]
         
 class FamiliesList():
     """A list of reaction families"""
     def __init__(self,path):
-        self.list = []
-        self.load(path)
+        self.path = path
+        self.load()
         self.__iter__ = self.list.__iter__ # if we iterate on self it behaves as self.list
     def path_to(self,relativepath):
         folderpath = os.path.dirname(self.path)
         return os.path.join(folderpath,relativepath)
-    def load(self,path):
-        self.path=path
-        for line in file(path):
+    def load(self):
+        self.list = []
+        self.dict = {}
+        for line in file(self.path):
             line = removeCommentFromLine(line.strip())
             if line:
                 (number,onoff,name) = line.split()
@@ -148,31 +187,31 @@ class FamiliesList():
                 family.onoff = onoff
                 family.name = name
                 self.list.append(family)
+                self.dict[family.name] = family
+                
+    def get_family(self,name):
+        return self.dict[name]
 
 class Database:
     """The kinetics database"""
     def __init__(self,path='RMG_database/kinetics'):
         self.path=path
-        self._familiesList = None
+        self.load()
+        
     def path_to(self,relativepath):
         return os.path.join(self.path,relativepath)
         
-    def getFamiliesList(self):
-        if not self._familiesList:
-            self._familiesList = FamiliesList(self.path_to('families.txt'))
-        return self._familiesList
-        
-    def getFamily(self,name):
-        """Get a family by name. 
-        Returns a Family() instance, or None if it looks like there isn't one"""
-        path = self.path_to(name)
-        if os.path.exists(path) and os.path.isdir(path):
-            return Family(self.path_to(name))
-        else: 
-            return None
+    def load(self):
+        self.families_list = FamiliesList(self.path_to('families.txt'))
+
+    def get_family(self,name):
+        """Get a family by name."""
+        return self.families_list.get_family(name)
+
+
     
     def convert_comments_to_rST(self):
-        """Convert comments files to reStructuredText"""
+        """Convert comments files to reStructuredText files. Run it once!"""
         import re
         __re_commentID = re.compile('^(\d+):\s+(.*)')
         for family in self.getFamiliesList():

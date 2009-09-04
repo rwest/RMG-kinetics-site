@@ -7,8 +7,7 @@
 <li><a href="{% url kinetics.views.family family_name=family.name %}">{{ family.name }}</a>&raquo;</li>
 {% endblock %}
 
-{% block page_heading %}{{ family.name }}{% endblock %}
-
+{% block page_heading %}<a href="{% url kinetics.views.family family_name=family.name %}">{{ family.name }}</a>{% endblock %}
 
 {% block page_body %}
 

@@ -15,34 +15,42 @@ def index(request):
     #import os
     #return HttpResponse(settings.PROJECT_PATH + '\n'+os.getcwd())
     
-    families_list = db.getFamiliesList()
+    families_list = db.families_list
     return render_to_response('index.html', {'families_list': families_list})
 
 def family(request, family_name):
     """A reaction family"""
-    family = db.getFamily(family_name)
+    family = db.get_family(family_name)
     if family is None:
         raise Http404
-    family.load()
     rates_for_table = family.rates
     return render_to_response('family.html', locals() )
     
 def rate(request, family_name, rate_id):
-    """THe details of a reaction rate."""
-    family = db.getFamily(family_name)
+    """The details of a reaction rate."""
+    family = db.get_family(family_name)
     if family is None:
         raise Http404
-    family.load()
-    rate = family.getRate(rate_id)
+    rate = family.get_rate(rate_id)
     rates_for_table = [rate]
-    comment_list = family.getCommentList()
-    general_comment = comment_list['General'].strip()
-    comment = comment_list[rate_id]
-    return render_to_response('rate.html', locals() )
+    general_comment = family.get_comment('General').strip()
+    comment = family.get_comment(rate_id)
+    groups=[]
+    for group_name in  rate.groups:
+        group = dict()
+        group['name']=group_name
+        group['definition'] = family.dictionary[group_name]
+        ancestors = family.tree.ancestors(group_name)
+        ancestors.reverse()
+        group['ancestors'] = ancestors
+        groups.append(group)
+        del(ancestors)
+        del(group)
+    return render_to_response('rate.html', locals() ) # pass everything in local namespace
        # {'family': family, 'rate': rate, 'comment': comment, 'general_comment': general_comment})
 
 def comments(request, family_name):
-    family = db.getFamily(family_name)
+    family = db.get_family(family_name)
     comments = file(family.path_to('comments.rst')).read()
     return render_to_response('comments.html',
         {'family': family,'comments': comments})

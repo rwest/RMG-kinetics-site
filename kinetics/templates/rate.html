@@ -1,4 +1,5 @@
 {% extends "family.html" %}
+{% load markup %}
 
 {% block title %}Kinetics: {{ family.name }}: {{ rate.id }}{% endblock %}
 
@@ -7,20 +8,43 @@
  {{ rate.id }}{% endblock %}
 
 {% block reaction_definition %}
-<h3>Reaction family definition</h3>
-{{ family.reaction }}
+<h3>Reaction family definition:</h3>
+<div class="rxn_definition">{{ family.reaction }}</div>
 
-{% if family.reverse %}<p>
-Reverse name: {{ family.reverse }}</p>
+{% if family.reverse %}
+<p>Reverse name: {{ family.reverse }}</p>
 {% endif %}
 {% endblock %}
 
 
-
 {% block above_table %}{% endblock %}
+
 {% block table_heading %}<h2>This rate:</h2>{% endblock %}
 
-{% load markup %}
+{% block below_table %}
+<h3>Group definitions:</h3>
+<table class="groups">
+  <tr>
+    {% for group in groups %}
+    <td>
+        <div style="padding-left: 0em;">
+        {% for ancestor in group.ancestors %}
+            {{ ancestor }}
+            </div>
+            <div style="padding-left: {{ forloop.counter }}em;">
+        {% endfor %}
+    <span class="main_group">{{ group.name }}</span>
+    </div>
+    <div class="group_definition">
+    <pre>{{ group.definition }}</pre>
+    </div>
+    </td>
+    {% endfor %}
+  </tr>
+</table>
+{% endblock %}
+
+
 {% block comments %}
 {% if comment %}
 <h3>Comments for rate {{ rate.id }}:</h3>

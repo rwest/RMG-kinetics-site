@@ -1,6 +1,11 @@
 # Django settings for mysite project.
 import os.path
+import sys
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
+
+# for RMG-Py
+RMG_PATH = os.path.realpath( os.path.join(PROJECT_PATH,'..','..','RMG-Py-Git','source') )
+
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
