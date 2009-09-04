@@ -34,6 +34,27 @@ def removeCommentFromLine(line):
 	if index >= 0:
 		line = line[0:index]
 	return line
+	
+class Uncertainty():
+    def __init__(self,token='0'):
+        self.from_string(token)
+    def __repr__(self):
+        return "Uncertainty(%s)"%self.string
+    def __str__(self):
+        convert={True:'*or/', False:'+or-'}
+        return " %s %g"%(convert[self.timesdivide],self.value)
+    def __unicode__(self):
+        convert={True:u'x÷', False:u'±'}
+        return " %s %g"%(convert[self.timesdivide],self.value)        
+    def from_string(self,token):
+        self.string = token
+        token=token.strip()
+        if token[0]=='*':
+            self.timesdivide = True
+            token = token[1:]
+        else:
+            self.timesdivide = False
+        self.value=float(token)
 
 class Rate():
     import re
@@ -55,6 +76,10 @@ class Rate():
         (  self.A,  self.n,  self.alpha,  self.E0, 
            self.DA, self.Dn, self.Dalpha, self.DE0,
            self.rank) = tokens[:9] # first 9 tokens
+        self.DA = Uncertainty(self.DA)
+        self.Dn = Uncertainty(self.Dn)
+        self.Dalpha = Uncertainty(self.Dalpha)
+        self.DE0 = Uncertainty(self.DE0)        
         self.comment = ' '.join(tokens[9:]) # the rest
          
 

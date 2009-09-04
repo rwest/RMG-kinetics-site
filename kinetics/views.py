@@ -70,4 +70,5 @@ def update(request):
     dbpath=os.path.join(settings.PROJECT_PATH,'RMG_Database','kinetics')
     message+=commands.getoutput('cd %s; cvs -q update'%dbpath)
     message+="</pre>"
+    db.load()
     return render_to_response('blank.html', {'heading':heading, 'message':message, 'message_safe':True})
