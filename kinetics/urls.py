@@ -3,6 +3,7 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns('RMG_site.kinetics.views',
     (r'^$',                                     'index'),
     (r'^convert$',                              'convert'),
+    (r'^update$',                               'update'),
     (r'^(?P<family_name>[^/]+)/$',              'family'),
     (r'^(?P<family_name>[^/]+)/comments/$',     'comments'),
     (r'^(?P<family_name>[^/]+)/(?P<rate_id>[^/]+)/$', 'rate'),

@@ -57,4 +57,17 @@ def comments(request, family_name):
 
 def convert(request):
     db.convert_comments_to_rST()
-    return HttpResponse("Converted all comments.txt files to comments.rst files")
+    heading = "Convert Comments"
+    message = "Converted all comments.txt files to comments.rst files"
+    return render_to_response('blank.html', {'heading':heading, 'message':message})
+
+def update(request):
+   # import cvs
+    import commands
+    heading = "Update from CVS"
+    message = "Updating from cvs server.."
+    message+="<pre>"
+    dbpath=os.path.join(settings.PROJECT_PATH,'RMG_Database','kinetics')
+    message+=commands.getoutput('cd %s; cvs -q update'%dbpath)
+    message+="</pre>"
+    return render_to_response('blank.html', {'heading':heading, 'message':message, 'message_safe':True})

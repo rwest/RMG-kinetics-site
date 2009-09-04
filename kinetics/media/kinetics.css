@@ -1,6 +1,6 @@
-/* @override http://127.0.0.1:8000/kinetics/media/kinetics.css */
-
-/* @override http://127.0.0.1:8000/media/RMG.css */
+span.main_group {
+	font-weight: bold;
+}
 
 table.rates, table.rates th, table.rates td {
 	border: 1px solid #666;

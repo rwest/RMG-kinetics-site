@@ -1,0 +1,20 @@
+{% extends "rmg_base.html" %}
+{% block title %}
+Kinetics Database{% if heading %} - {{ heading }}{% endif %}{% endblock %}
+
+{% block page_heading %}{% if heading %}{{ heading }}{% else %}Kinetics Database{% endif %}{% endblock %}
+
+
+{% block extrahead %}<link rel="stylesheet" href="/kinetics/media/kinetics.css" type="text/css">{% endblock %}
+
+{% block navbar_items %}<li><a href="{% url kinetics.views.index %}">Kinetics</a> &raquo;</li>{% endblock %}
+
+{% block page_body %}
+<p>
+{% if message_safe %}
+{{ message|safe }}
+{% else %}
+{{ message }}
+{% endif %}
+</p>
+{% endblock %}
