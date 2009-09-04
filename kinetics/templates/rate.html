@@ -1,26 +1,39 @@
 {% extends "family.html" %}
 
 {% block title %}Kinetics: {{ family.name }}: {{ rate.id }}{% endblock %}
+
 {% block page_heading %}
-<a href="{% url kinetics.views.index %}">Kinetics</a>: 
-<a href="{% url kinetics.views.family family_name=family.name %}">{{ family.name }}</a>:
+<a href="{% url kinetics.views.family family_name=family.name %}">{{ family.name }}</a> rate
  {{ rate.id }}{% endblock %}
 
+{% block reaction_definition %}
+<h3>Reaction family definition</h3>
+{{ family.reaction }}
+
+{% if family.reverse %}<p>
+Reverse name: {{ family.reverse }}</p>
+{% endif %}
+{% endblock %}
+
+
+
 {% block above_table %}{% endblock %}
+{% block table_heading %}<h2>This rate:</h2>{% endblock %}
+
 {% load markup %}
 {% block comments %}
-
 {% if comment %}
 <h3>Comments for rate {{ rate.id }}:</h3>
-<div style='background-color: #fee;'>
+<div class="comments">
 {{ comment|restructuredtext }}
 </div>
-Comments formatted using 
+
+<span class="aside">Comments formatted using 
 <a href="http://docutils.sourceforge.net/docs/user/rst/quickref.html">reStructuredText</a> 
 . 
 <a href="javascript:;" onmousedown="if(document.getElementById('commentsource').style.display == 'none'){ document.getElementById('commentsource').style.display = 'block'; }else{ document.getElementById('commentsource').style.display = 'none'; }">
-View source.</a>
-<div id='commentsource' style="width:80%; overflow: auto; background-color: #eee; display: none">
+View source.</a></span>
+<div id='commentsource' style="display: none">
 <pre>
 {{ comment }}
 </pre>
@@ -29,6 +42,8 @@ View source.</a>
 
 {% if general_comment %}
 <h3>General comments for {{ family.name }} family: </h3>
+<div class="comments">
 {{ general_comment|restructuredtext }}
+</div>
 {% endif %}
 {% endblock %}

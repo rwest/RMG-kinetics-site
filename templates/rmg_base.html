@@ -6,14 +6,61 @@
 	<title>{% block title %}Kinetics Database{% endblock %}</title>
 	<meta name="generator" content="TextMate http://macromates.com/">
 	<meta name="author" content="Richard West">
-<link rel="stylesheet" href="default.css" type="text/css">
+<link rel="stylesheet" href="/media/RMG.css" type="text/css">
 {% block extrahead %}{% endblock %}
 </head>
 <body>
 
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-7791083-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+{% block topbar %}	
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="/">RMG</a> &raquo;</li>
+		{% block navbar_items %}{% endblock %}
+      </ul>
+    </div>
+{% endblock %}
+
+	
+    <div class="document">
+      <div class="documentwrapper">
+	 <div class="bodywrapper">
+          <div class="body">
+	
 <h1>{% block page_heading %}Kinetics Database{% endblock %}</h1>
 
 {% block page_body %}The RMG Kinetics Database{% endblock %}
+
+</div></div>
+</div></div>
+
+{% block sidebar %}
+<div class="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+      <p class="logo"><a href="/">
+        <img class="logo" src="/media/rmg_logo.png" alt="Logo"/>
+      </a></p>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block footer %}
+    <div class="footer">
+   Created using <a href="http://www">magic</a>.
+    </div>
+{% endblock %}
 
 </body>
 </html>
