@@ -41,11 +41,12 @@ class Uncertainty():
     def __repr__(self):
         return "Uncertainty(%s)"%self.string
     def __str__(self):
-        convert={True:'*or/', False:'+or-'}
-        return " %s %g"%(convert[self.timesdivide],self.value)
-    def __unicode__(self):
-        convert={True:u'x÷', False:u'±'}
-        return " %s %g"%(convert[self.timesdivide],self.value)        
+        """Used by Django, so return HTML"""
+        convert={True:'&times;/&divide;', False:'&plusmn;'}
+        return "%s %g"%(convert[self.timesdivide],self.value)
+#    def __unicode__(self):
+#        convert={True:u'÷', False:u'±'}
+#        return " %s %g"%(convert[self.timesdivide],self.value)        
     def from_string(self,token):
         self.string = token
         token=token.strip()
@@ -79,7 +80,8 @@ class Rate():
         self.DA = Uncertainty(self.DA)
         self.Dn = Uncertainty(self.Dn)
         self.Dalpha = Uncertainty(self.Dalpha)
-        self.DE0 = Uncertainty(self.DE0)        
+        self.DE0 = Uncertainty(self.DE0)
+        self.rank = int(self.rank)
         self.comment = ' '.join(tokens[9:]) # the rest
          
 

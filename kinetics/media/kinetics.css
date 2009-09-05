@@ -1,13 +1,49 @@
+/* @override http://127.0.0.1:8000/kinetics/media/kinetics.css */
+
 span.main_group {
 	font-weight: bold;
 }
+
+/* @override http://127.0.0.1:8000/media/RMG.css */
 
 table.rates, table.rates th, table.rates td {
 	border: 1px solid #666;
 	background-color: white;
 	padding:  02px;
 	border-collapse: collapse;
+	vertical-align: top;
 }
+
+td.td_rank_1, td.td_rank_2, td.td_rank_3, td.td_rank_4, td.td_rank_5, td.td_rank_0 {
+	text-align: center;
+}
+
+span.rank {
+	text-align: center;
+	display: block;
+}
+
+td.td_rank_1 {
+	color: #0e0;
+}
+td.td_rank_2 {
+	color: #abe81e;
+}
+td.td_rank_3 {
+	color: #e5d83d;
+}
+td.td_rank_4 {
+	color: #ff5100;
+}
+td.td_rank_5 {
+	color: #f80000;
+}
+td.td_rank_0 {
+	color: #f00;
+	font-weight: bold;
+}
+
+
 table.rates {
 	border: 2px ridge #ac2731;
 }

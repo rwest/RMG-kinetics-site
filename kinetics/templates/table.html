@@ -6,6 +6,7 @@
 <th>n</th>
 <th>alpha</th>
 <th>E0</th>
+<th>Rank</th>
 <th>Comment</th>
 </tr>
 {% for rate in rates_for_table %}
@@ -18,23 +19,27 @@
 {% for group in rate.groups %}
 <td>{{ group }} </td>
 {% endfor %}
-<td class="value"> {{ rate.Trange }}
+<td class="td_value">
+<span class="value">{{ rate.Trange }}</span>
 </td>
-<td class="value">
+<td class="td_value">
 <span class="value">{{ rate.A }}</span>
-<span class="uncertainty"> {{ rate.DA }}</span>
+<span class="uncertainty"> {{ rate.DA|safe }}</span>
 </td>
 <td class="td_value">
 <span class="value">{{ rate.n }}</span>
-<span class="uncertainty"> {{ rate.Dn }}</span>
+<span class="uncertainty"> {{ rate.Dn|safe }}</span>
 </td>
 <td class="td_value">
 <span class="value">{{ rate.alpha }}</span>
-<span class="uncertainty"> {{ rate.Dalpha }}</span>
+<span class="uncertainty"> {{ rate.Dalpha|safe }}</span>
 </td>
 <td class="td_value">
 <span class="value">{{ rate.E0 }}</span>
-<span class="uncertainty"> {{ rate.DE0 }}</span>
+<span class="uncertainty"> {{ rate.DE0|safe }}</span>
+</td>
+<td class="td_rank_{{ rate.rank }}">
+<span class="rank">{{ rate.rank }}</span>
 </td>
 <td class="td_comment">
 {{ rate.comment }}
