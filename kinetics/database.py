@@ -209,7 +209,7 @@ class FamiliesList():
             if line:
                 (number,onoff,name) = line.split()
                 family_path = self.path_to(name)
-                family = Family(family_path) 
+                family = Family(family_path)
                 family.number = number
                 family.onoff = onoff
                 family.name = name

@@ -10,15 +10,17 @@
 
 {% block page_body %}
 {% if families_list %}
-    <ul>
+    <ol>
     {% for family in families_list %}
-		
-        <li>{{ family.number }} - 
+    <li>{#{ family.number }#} 
 	<a href="{% url kinetics.views.family family_name=family.name %}"> {{ family.name }}</a>
+	{% with family.rates|length as nrates %}
+	({{ nrates }} rate{{ nrates|pluralize }}{% ifequal family.onoff 'off' %}; turned off by default{% endifequal %})
+	{% endwith %}
 	</li>
 
     {% endfor %}
-    </ul>
+    </ol>
 {% else %}
     <p>No families are available.</p>
 {% endif %}
