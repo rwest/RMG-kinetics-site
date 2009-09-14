@@ -6,6 +6,7 @@ urlpatterns = patterns('RMG_site.kinetics.views',
     (r'^update$',                               'update'),
     (r'^(?P<family_name>[^/]+)/$',              'family'),
     (r'^(?P<family_name>[^/]+)/comments/$',     'comments'),
+    (r'^(?P<family_name>[^/]+)/tree/$',         'tree'),
     (r'^(?P<family_name>[^/]+)/(?P<rate_id>[^/]+)/$', 'rate'),
 
     # Example:

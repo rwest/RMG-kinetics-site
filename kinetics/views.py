@@ -35,7 +35,7 @@ def rate(request, family_name, rate_id):
     rates_for_table = [rate]
     general_comment = family.get_comment('General').strip()
     comment = family.get_comment(rate_id)
-    groups=[]
+    groups=[] # a list (of dictionaries) that we pass to the template
     for group_name in  rate.groups:
         group = dict()
         group['name']=group_name
@@ -48,6 +48,11 @@ def rate(request, family_name, rate_id):
         del(group)
     return render_to_response('rate.html', locals() ) # pass everything in local namespace
        # {'family': family, 'rate': rate, 'comment': comment, 'general_comment': general_comment})
+
+
+def tree(request, family_name):
+    family = db.get_family(family_name)
+    return render_to_response('tree.html', locals() ) # pass everything in local namespace
 
 def comments(request, family_name):
     family = db.get_family(family_name)
