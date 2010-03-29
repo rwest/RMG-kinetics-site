@@ -13,6 +13,8 @@ from django.conf import settings
 # fire up the big guns
 sys.path.append(settings.RMG_PATH)
 import rmg
+import rmg.data
+
 
 def loadKineticsDatabases(databasePath, only_families=False):
 	"""
@@ -221,7 +223,7 @@ class FamiliesList():
 
 class Database:
     """The kinetics database"""
-    def __init__(self,path='RMG_database/kinetics'):
+    def __init__(self,path='RMG_database/kinetics_groups'):
         self.path=path
         self.load()
         

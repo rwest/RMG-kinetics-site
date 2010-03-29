@@ -4,7 +4,7 @@ import sys
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 # for RMG-Py
-RMG_PATH = os.path.realpath( os.path.join(PROJECT_PATH,'..','..','RMG-Py-Git','source') )
+RMG_PATH = os.path.realpath( os.path.join(os.getenv('RMGpy'),'source') )
 
 
 DEBUG = True
