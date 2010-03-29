@@ -8,7 +8,7 @@ from django.conf import settings
 import os
 import RMG_site.kinetics.database
 db = RMG_site.kinetics.database.Database(
-    os.path.join(settings.PROJECT_PATH,'RMG_Database','kinetics') )
+    os.path.join(settings.PROJECT_PATH,'RMG_Database','kinetics_groups') )
 
 def index(request):
     """The index - list of families"""
