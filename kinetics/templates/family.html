@@ -29,8 +29,13 @@ Actions:
 <a href="{% url kinetics.views.comments family_name=family.name %}">View entire comments file.</a>
 {% endblock %}
 
+
+{% block table %}
 {% block table_heading %}<h2>Rates:</h2>{% endblock %}
+{% block table_body %}
 {% include 'table.html' %}
+{% endblock %}
+{% endblock %}
 
 {% block below_table %}{% endblock %}
 
