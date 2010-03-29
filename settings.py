@@ -4,7 +4,10 @@ import sys
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 # for RMG-Py
-RMG_PATH = os.path.realpath( os.path.join(os.getenv('RMGpy'),'source') )
+if os.getenv('RMGpy'):
+    RMG_PATH = os.path.realpath( os.path.join(os.getenv('RMGpy'),'source') )
+else:
+    RMG_PATH = "Please set path to RMG-Py in environment variable RMGpy"
 
 
 DEBUG = True
