@@ -25,6 +25,21 @@ def family(request, family_name):
         raise Http404
     rates_for_table = family.rates
     return render_to_response('family.html', locals() )
+
+def family_python(request, family_name):
+    """A reaction family, rendered in python"""
+    family = db.get_family(family_name)
+    if family is None:
+        raise Http404
+    rates_for_table = family.rates
+
+    for rate in rates_for_table:
+        rate.group_definitions = list()
+        for group_name in  rate.groups:
+            rate.group_definitions.append(family.dictionary[group_name])
+        rate.long_comment = family.get_comment(rate.id)
+
+    return render_to_response('family_python.html', locals() )
     
 def rate(request, family_name, rate_id):
     """The details of a reaction rate."""

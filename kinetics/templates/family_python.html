@@ -1,0 +1,60 @@
+{% extends "index.html" %}
+
+{% load stylize %}
+{% block extrahead %}{{ block.super }}
+<link rel="stylesheet" href="/kinetics/media/pygments.css" type="text/css">{% endblock extrahead %}
+
+{% block title %}RMG Kinetics: {{ family.name }}{% endblock %}
+
+{% block navbar_items %}
+<li><a href="/kinetics/">Kinetics</a> &raquo;</li>
+<li><a href="{% url kinetics.views.family family_name=family.name %}">{{ family.name }}</a>&raquo;</li>
+{% endblock %}
+
+{% block page_heading %}<a href="{% url kinetics.views.family family_name=family.name %}">{{ family.name }}</a>{% endblock %}
+
+{% block page_body %}
+
+{% block reaction_definition %}
+<h2>
+{{ family.reaction }}
+</h2>
+{% if family.reverse %}
+Reverse name: {{ family.reverse }}
+{% endif %}
+{% endblock %}
+
+<p>
+Actions:
+<pre>{{ family.actions }}</pre>
+</p>
+
+{% block above_table %}
+<a href="{% url kinetics.views.comments family_name=family.name %}">View entire comments file.</a>
+{% endblock %}
+
+
+{% block table %}
+{% block table_heading %}<h2>Rates:</h2>{% endblock %}
+{% block table_body %}
+
+{% stylize "python" %}
+{% include 'table.py' %}
+{% endstylize %}
+{% endblock %}
+{% endblock %}
+
+{% block below_table %}{% endblock %}
+
+{% block comments %}
+<h2>Comments</h2>
+In addition to the <a href="{% url kinetics.views.comments family_name=family.name %}">comments file</a>,
+ these lines in rateLibrary.txt were not interpreted as rates and are probably comments:
+<div class="preblock">
+<pre>
+{{ family.unread }}
+</pre>
+</div>
+{% endblock %}
+
+{% endblock %}
