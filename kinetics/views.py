@@ -75,11 +75,55 @@ def comments(request, family_name):
     return render_to_response('comments.html',
         {'family': family,'comments': comments})
 
-def convert(request):
+def convert_to_rST(request):
     db.convert_comments_to_rST()
     heading = "Convert Comments"
     message = "Converted all comments.txt files to comments.rst files"
     return render_to_response('blank.html', {'heading':heading, 'message':message})
+    
+def convert_to_py(request):
+    import codecs # to write unicode file
+    """Convert the database libraries into the python syntax"""
+    heading = "Convert Comments"
+    message = "Converted rateLibrary.txt files to library.py files:"
+    
+    pytemplate = loader.get_template('table.py')
+    try:
+        for family in db.families_list:
+            if not os.path.exists(family.path_to('rateLibrary.txt')): 
+                message += "<li>Skipping %s because no rateLibrary.txt found</li>\n"%family.name
+                continue
+            in_file = file(family.path_to('rateLibrary.txt'))
+            out_file = codecs.open(family.path_to('library.py'),'w',"utf-8" )
+            #out_file = file(family.path_to('library.py'),'w')
+            rates_for_table = family.rates
+            for rate in rates_for_table:
+                rate.group_definitions = list()
+                for group_name in  rate.groups:
+                    if group_name.startswith('Others-') and not family.dictionary.has_key(group_name):
+                        rate.group_definitions.append(group_name+'\n') # no definition
+                    else:
+                        rate.group_definitions.append(family.dictionary[group_name])
+                rate.long_comment = family.get_comment(rate.id)
+            
+            context = Context( locals() )
+            rate_response = pytemplate.render( context )
+            out_file.write(rate_response)
+            in_file.close()
+            out_file.close()
+            message += "<li>Done %s</li>\n"%family.name
+    except Exception, e:
+        message += "<li>FAILED on %s</li>\n"%family.name
+        message += repr(e)
+        # write what you have so far
+        context = Context( locals() )
+        rate_response = pytemplate.render( context )
+        out_file.write(rate_response)
+        in_file.close()
+        out_file.close()
+    
+    return render_to_response('blank.html', {'heading':heading, 'message':message, 'message_safe':True})
+
 
 def update(request):
    # import cvs

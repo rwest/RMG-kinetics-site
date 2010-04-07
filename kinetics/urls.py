@@ -2,7 +2,8 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('RMG_site.kinetics.views',
     (r'^$',                                     'index'),
-    (r'^convert$',                              'convert'),
+    (r'^convert_to_rST$',                       'convert_to_rST'),
+    (r'^convert_to_py$',                        'convert_to_py'),
     (r'^update$',                               'update'),
     (r'^(?P<family_name>[^/]+)/$',              'family'),
     (r'^(?P<family_name>[^/]+)/library\.py$',   'family_python'),
