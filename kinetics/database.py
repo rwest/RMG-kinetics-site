@@ -94,7 +94,7 @@ class Rate():
         self.Dn = Uncertainty(self.Dn)
         self.Dalpha = Uncertainty(self.Dalpha)
         self.DE0 = Uncertainty(self.DE0)
-        self.rank = int(self.rank)
+        self.rank = int(self.rank) # http://gist.github.com/358948
         self.comment = ' '.join(tokens[9:]) # the rest
          
 
@@ -132,7 +132,7 @@ class CommentList():
         if not self.comments_dict:
             self.load()
         try:
-            return self.comments_dict[comment_id]
+            return self.comments_dict[comment_id].rstrip('\n')+'\n'
         except KeyError:
             return ''
             #return "no comment for rxn '%s'"%comment_id

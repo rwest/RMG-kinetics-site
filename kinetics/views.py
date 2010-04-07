@@ -90,7 +90,7 @@ def convert_to_rST(request):
 def convert_to_py(request):
     import codecs # to write unicode file
     """Convert the database libraries into the python syntax"""
-    heading = "Convert Comments"
+    heading = "Convert library to python"
     message = "Converted rateLibrary.txt files to library.py files:"
     
     pytemplate = loader.get_template('library.py')
