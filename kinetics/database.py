@@ -9,6 +9,7 @@ Copyright (c) 2009 MIT. All rights reserved.
 import sys
 import os
 import unittest
+import re
 from django.conf import settings
 # fire up the big guns
 sys.path.append(settings.RMG_PATH)
@@ -17,26 +18,26 @@ import rmg.data
 
 
 def loadKineticsDatabases(databasePath, only_families=False):
-	"""
-	Create and load the kinetics databases (reaction families).
-	If only_families is a list like ['H_Abstraction'] then only families in this
-	list will be loaded.
-	
-	Currently incompatible with RMG(java) database syntax.
-	"""
-	rmg.reaction.kineticsDatabase = rmg.reaction.ReactionFamilySet()
-	rmg.reaction.kineticsDatabase.load(databasePath, only_families=only_families)
-	
-
+    """
+    Create and load the kinetics databases (reaction families).
+    If only_families is a list like ['H_Abstraction'] then only families in this
+    list will be loaded.
+    
+    Currently incompatible with RMG(java) database syntax.
+    """
+    rmg.reaction.kineticsDatabase = rmg.reaction.ReactionFamilySet()
+    rmg.reaction.kineticsDatabase.load(databasePath, only_families=only_families)
+    
+    
 def removeCommentFromLine(line):
-	"""
-	Remove a C++/Java style comment from a line of text.
-	"""
-	index = line.find('//')
-	if index >= 0:
-		line = line[0:index]
-	return line
-	
+    """
+    Remove a C++/Java style comment from a line of text.
+    """
+    index = line.find('//')
+    if index >= 0:
+        line = line[0:index]
+    return line
+    
 class Uncertainty():
     def __init__(self,token='0'):
         self.from_string(token)
@@ -60,7 +61,7 @@ class Uncertainty():
         self.value=float(token)
 
 class Rate():
-    import re
+    
     __re_Trange = re.compile('^[0-9\-.]*$')
     def __init__(self,line=None):
         self.line=line
