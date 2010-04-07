@@ -49,7 +49,12 @@ class Uncertainty():
         return "%s %g"%(convert[self.timesdivide],self.value)
 #    def __unicode__(self):
 #        convert={True:u'÷', False:u'±'}
-#        return " %s %g"%(convert[self.timesdivide],self.value)        
+#        return " %s %g"%(convert[self.timesdivide],self.value)
+    def toPython(self):
+        """Used in python output. Returns tuple eg. ('+-', 4.0) """
+        convert={True:'*/', False:'+-'}
+        return convert[self.timesdivide], self.value
+    
     def from_string(self,token):
         self.string = token
         token=token.strip()
