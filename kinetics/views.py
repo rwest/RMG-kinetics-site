@@ -87,7 +87,7 @@ def convert_to_py(request):
     heading = "Convert Comments"
     message = "Converted rateLibrary.txt files to library.py files:"
     
-    pytemplate = loader.get_template('table.py')
+    pytemplate = loader.get_template('library.py')
     try:
         for family in db.families_list:
             if not os.path.exists(family.path_to('rateLibrary.txt')): 
