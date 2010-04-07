@@ -82,6 +82,11 @@ class Rate():
         while not self.__re_Trange.match(tokens[0]):
             self.groups.append(tokens.pop(0))
         self.Trange = tokens.pop(0)
+        if re.search('-',self.Trange):
+            self.Tmin, self.Tmax = self.Trange.split('-')
+        else:
+            self.Tmin = self.Trange
+            self.Tmax = None
         (  self.A,  self.n,  self.alpha,  self.E0, 
            self.DA, self.Dn, self.Dalpha, self.DE0,
            self.rank) = tokens[:9] # first 9 tokens
