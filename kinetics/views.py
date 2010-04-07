@@ -36,7 +36,10 @@ def family_python(request, family_name):
     for rate in rates_for_table:
         rate.group_definitions = list()
         for group_name in  rate.groups:
-            rate.group_definitions.append(family.dictionary[group_name])
+            if group_name.startswith('Others-') and not family.dictionary.has_key(group_name):
+                rate.group_definitions.append(group_name+'\n') # no definition
+            else:
+                rate.group_definitions.append(family.dictionary[group_name])
         rate.long_comment = family.get_comment(rate.id)
 
     return render_to_response('family_python.html', locals() )
@@ -54,7 +57,10 @@ def rate(request, family_name, rate_id):
     for group_name in  rate.groups:
         group = dict()
         group['name']=group_name
-        group['definition'] = family.dictionary[group_name]
+        if group_name.startswith('Others-'):
+            group['definition'] = group_name+'\n' # no definition
+        else:
+            group['definition'] = family.dictionary[group_name]
         ancestors = family.tree.ancestors(group_name)
         ancestors.reverse()
         group['ancestors'] = ancestors
