@@ -1,0 +1,16 @@
+{% extends "rmg_base.html" %}
+
+{% block title %}{{ mechanism.name }}{% endblock %}
+{% block page_heading %}{{ mechanism.name }}{% endblock %}
+
+{% block extrahead %}<link rel="stylesheet" href="/converter/media/converter.css" type="text/css">{% endblock %}
+
+{% block navbar_items %}<li><a href="{% url converter.views.index %}">Converter</a> &raquo;</li>
+<li><a href="{% url converter.views.mechanism mechanism_name=mechanism.name %}">{{ mechanism.name }}</a> &raquo;</li>{% endblock %}
+
+{% block page_body %}
+<h3>Chemkin file:</h3>
+<a href="{{ mechanism.chemkin_file.url }}"> {{ mechanism.chemkin_file.name  }}</a> ({{ mechanism.chemkin_file.size|filesizeformat }})
+
+
+{% endblock %}

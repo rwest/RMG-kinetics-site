@@ -1,0 +1,24 @@
+{% extends "rmg_base.html" %}
+
+{% block title %}Mechanism Converter{% endblock %}
+{% block page_heading %}Mechanism Converter {% endblock %}
+
+
+{% block extrahead %}<link rel="stylesheet" href="/converter/media/converter.css" type="text/css">{% endblock %}
+
+{% block navbar_items %}<li><a href="{% url converter.views.index %}">Converter</a> &raquo;</li>{% endblock %}
+
+{% block page_body %}
+{% if mechanisms_list %}
+    <ol>
+    {% for mechanism in mechanisms_list %}
+    <li>{#{ mechanism.number }#} 
+	<a href="{% url converter.views.mechanism mechanism_name=mechanism.name %}"> {{ mechanism.name }}</a>
+	</li>
+    {% endfor %}
+    </ol>
+{% else %}
+    <p>No mechanisms are available.</p>
+{% endif %}
+
+{% endblock %}
