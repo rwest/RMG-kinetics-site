@@ -6,7 +6,7 @@
 {% block extrahead %}<link rel="stylesheet" href="/converter/media/converter.css" type="text/css">{% endblock %}
 
 {% block navbar_items %}<li><a href="{% url converter.views.index %}">Converter</a> &raquo;</li>
-<li><a href="{% url converter.views.mechanism mechanism_name=mechanism.name %}">{{ mechanism.name }}</a> &raquo;</li>{% endblock %}
+<li><a href="{% url converter.views.mechanism mechanism_id=mechanism.id %}">{{ mechanism.name }}</a> &raquo;</li>{% endblock %}
 
 {% block page_body %}
 <h3>Chemkin file:</h3>

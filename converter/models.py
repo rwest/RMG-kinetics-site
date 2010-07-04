@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ModelForm
 
 # Create your models here.
 class Mechanism(models.Model):
@@ -7,6 +8,12 @@ class Mechanism(models.Model):
     
     def __unicode__(self):
         return self.name
+
+# Form for creating new mechanism
+class MechanismForm(ModelForm):
+    class Meta:
+        model = Mechanism
+        fields = ('name', 'chemkin_file')
 
 class Reaction(models.Model):
     mechanism = models.ForeignKey(Mechanism)

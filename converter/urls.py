@@ -2,9 +2,11 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('RMG_site.converter.views',
     (r'^$',                                     'index'),
-    (r'^(?P<mechanism_name>[^/]+)/$',           'mechanism'),
-    (r'^(?P<mechanism_name>[^/]+)/reactions/$',    'reactions'),
-    (r'^(?P<mechanism_name>[^/]+)/reactions/(?P<reaction_id>\d+)$',     'reaction'),
+    (r'^new/$',                                'new'),
+    (r'^mechanisms/(?P<mechanism_id>[^/]+)/$',           'mechanism'),
+    (r'^mechanisms/(?P<mechanism_id>[^/]+)/reactions/$',    'reactions'),
+    (r'^mechanisms/(?P<mechanism_id>[^/]+)/reactions/(?P<reaction_id>\d+)$', 'reaction'),
+    
 
     # Example:
     # (r'^mysite/', include('mysite.foo.urls')),

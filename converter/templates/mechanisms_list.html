@@ -13,12 +13,20 @@
     <ol>
     {% for mechanism in mechanisms_list %}
     <li>{#{ mechanism.number }#} 
-	<a href="{% url converter.views.mechanism mechanism_name=mechanism.name %}"> {{ mechanism.name }}</a>
+	<a href="{% url converter.views.mechanism mechanism_id=mechanism.id %}"> {{ mechanism.name }}</a>
 	</li>
     {% endfor %}
     </ol>
 {% else %}
     <p>No mechanisms are available.</p>
 {% endif %}
+
+<h3>Create new mechanism</h3>
+<form enctype="multipart/form-data" method="post" action="{% url converter.views.index %}new/">
+<table>
+{{ form.as_table }}
+</table>
+<input type="submit">
+</form>
 
 {% endblock %}
