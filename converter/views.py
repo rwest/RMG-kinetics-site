@@ -7,6 +7,7 @@ from django.conf import settings
 
 from RMG_site.converter.models import Mechanism, Reaction, MechanismForm
 
+import converter
 
 
 def index(request):
@@ -15,15 +16,22 @@ def index(request):
     return render_to_response('mechanisms_list.html', {'mechanisms_list': all_mechanisms, 'form': form })
 
 def new(request):
-    if False:
-        heading = "Invalid Mechanism"
-        message = "You failde to make a new mechanism"
-        return render_to_response('blank.html', {'heading':heading, 'message':message})
-    else:
-        f = MechanismForm(request.POST)
+    try:
+        f = MechanismForm(request.POST,request.FILES)
         new_mechanism = f.save()
-        return HttpResponseRedirect(reverse('RMG_site.converter.views.mechanism',args=(new_mechanism.id,)))
+    except ValueError:
+        heading = "Invalid Mechanism"
+        message = "You failed to make a new mechanism"
+        if settings.DEBUG: raise
+        return render_to_response('blank.html', {'heading':heading, 'message':message})
     
+    return HttpResponseRedirect(reverse('RMG_site.converter.views.mechanism',args=(new_mechanism.id,)))
+
+def ck2cti(request, mechanism_id):
+    m = get_object_or_404(Mechanism, pk=mechanism_id) 
+    converter.convert_chemkin_to_cantera(m)
+    return HttpResponseRedirect(reverse('RMG_site.converter.views.mechanism',args=(m.id,)))
+
 def mechanism(request, mechanism_id):
     m = get_object_or_404(Mechanism, pk=mechanism_id) # pk is shortcut for primary key, in this case 'id'
     return render_to_response('mechanism.html', {'mechanism': m})
