@@ -5,19 +5,28 @@
 
 {% block extrahead %}<link rel="stylesheet" href="/converter/media/converter.css" type="text/css">{% endblock %}
 
-{% block navbar_items %}<li><a href="{% url converter.views.index %}">Converter</a> &raquo;</li>
+{% block navbar_items %}<li><a href="{% url converter.views.mechanisms_list %}">Converter</a> &raquo;</li>
 <li><a href="{% url converter.views.mechanism mechanism_id=mechanism.id %}">{{ mechanism.name }}</a> &raquo;</li>{% endblock %}
 
 {% block page_body %}
-<h3>Chemkin file:</h3>
-<a href="{{ mechanism.chemkin_file.url }}"> {{ mechanism.chemkin_file.name  }}</a> ({{ mechanism.chemkin_file.size|filesizeformat }})
 
+<h3>Chemkin file:</h3>
+{% if not mechanism.chemkin_file %}
+<form enctype="multipart/form-data" method="post" action="{% url converter.views.upload mechanism_id=mechanism.id %}">
+<table>
+{{ form.as_table }}
+</table>
+<input type="submit">
+{% else %}
+<a href="{{ mechanism.chemkin_file.url }}"> {{ mechanism.chemkin_file.name  }}</a> ({{ mechanism.chemkin_file.size|filesizeformat }})
 
 <h3>Cantera file:</h3>
 {% if mechanism.cantera_file %}
-<a href="{{ mechanism.cantera_file.url }}"> {{ mechanism.cantera_file.name  }}</a> ({{ mechanism.cantera_file.size|filesizeformat }})
+    <a href="{{ mechanism.cantera_file.url }}"> {{ mechanism.cantera_file.name  }}</a> ({{ mechanism.cantera_file.size|filesizeformat }})
 {% else %}
-<a href="{% url converter.views.ck2cti mechanism_id=mechanism.id %}">Convert Chemkin to Cantera</a>
+    <a href="{% url converter.views.ck2cti mechanism_id=mechanism.id %}">Convert Chemkin to Cantera</a>
 {% endif %}
+{% endif %}
+
 
 {% endblock %}

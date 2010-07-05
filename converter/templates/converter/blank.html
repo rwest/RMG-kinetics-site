@@ -7,7 +7,7 @@ Mechanism Converter{% if heading %} - {{ heading }}{% endif %}{% endblock %}
 
 {% block extrahead %}<link rel="stylesheet" href="/converter/media/converter.css" type="text/css">{% endblock %}
 
-{% block navbar_items %}<li><a href="{% url converter.views.index %}">Mechanism Converter</a> &raquo;</li>{% endblock %}
+{% block navbar_items %}<li><a href="{% url converter.views.mechanisms_list %}">Mechanism Converter</a> &raquo;</li>{% endblock %}
 
 {% block page_body %}
 <p>

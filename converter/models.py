@@ -1,24 +1,15 @@
 from django.db import models
-from django.forms import ModelForm
-import time
 
 # Create your models here.
 class Mechanism(models.Model):
     name = models.CharField(max_length=60)
     def upload_to(instance, filename):
-        return 'mechanisms/%.0f/%s'%(time.time()*100, filename)
+        return 'converter/%s/%s'%(instance.pk, filename)
     chemkin_file = models.FileField(upload_to=upload_to)
-    cantera_file = models.FileField(upload_to='mechanisms')
+    cantera_file = models.FileField(upload_to=upload_to)
     
     def __unicode__(self):
         return self.name
-
-
-# Form for creating new mechanism
-class MechanismForm(ModelForm):
-    class Meta:
-        model = Mechanism
-        fields = ('name', 'chemkin_file')
 
 class Reaction(models.Model):
     mechanism = models.ForeignKey(Mechanism)
