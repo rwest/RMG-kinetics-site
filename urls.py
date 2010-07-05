@@ -7,6 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     (r'^kinetics/', include('RMG_site.kinetics.urls')),
     (r'^converter/', include('RMG_site.converter.urls')),
+    (r'^visualizer/', include('RMG_site.visualizer.urls')),
     
     # Example:
     # (r'^mysite/', include('mysite.foo.urls')),
