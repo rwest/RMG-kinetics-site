@@ -7,6 +7,8 @@ class Mechanism(models.Model):
         return 'converter/%s/%s'%(instance.pk, filename)
     chemkin_file = models.FileField(upload_to=upload_to)
     cantera_file = models.FileField(upload_to=upload_to)
+    cantera_validated = models.BooleanField()
+    cantera_validation_log_file = models.FileField(upload_to=upload_to)
     
     def __unicode__(self):
         return self.name
