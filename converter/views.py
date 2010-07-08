@@ -23,17 +23,6 @@ def mechanisms_list(request):
     
     return render_to_response('converter/mechanisms_list.html', {'mechanisms_list': all_mechanisms, 'form': form })
 
-def new(request):
-    try:
-        f = NewMechanismForm(request.POST)
-        m = f.save()
-    except ValueError:
-        heading = "Invalid Mechanism"
-        message = "I failed to make a new mechanism for you."
-        if settings.DEBUG: raise
-        return render_to_response('converter/blank.html', {'heading':heading, 'message':message})
-    return HttpResponseRedirect(reverse('RMG_site.converter.views.mechanism',args=(m.id,)))
-
 
 def upload(request, mechanism_id):
     try:
