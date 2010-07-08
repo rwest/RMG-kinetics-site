@@ -1,0 +1,32 @@
+{% extends "rmg_base.html" %}
+
+{% block title %}Mechanism Converter{% endblock %}
+{% block page_heading %}Mechanism Visualizer {% endblock %}
+
+
+{% block extrahead %}<link rel="stylesheet" href="/visualizer/media/visualizer.css" type="text/css">{% endblock %}
+
+{% block navbar_items %}<li><a href="{% url visualizer.views.mechanisms_list %}">Converter</a> &raquo;</li>{% endblock %}
+
+{% block page_body %}
+{% if mechanisms_list %}
+    <ol>
+    {% for mechanism in mechanisms_list %}
+    <li>{#{ mechanism.number }#} 
+	<a href="{% url visualizer.views.mechanism mechanism_id=mechanism.id %}"> {{ mechanism.name }}</a>
+	</li>
+    {% endfor %}
+    </ol>
+{% else %}
+    <p>No mechanisms are available.</p>
+{% endif %}
+
+<h3>Create new mechanism</h3>
+<form method="post" action="{% url visualizer.views.new %}">
+<table>
+{{ form.as_table }}
+</table>
+<input type="submit">
+</form>
+
+{% endblock %}
