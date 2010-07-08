@@ -46,3 +46,7 @@ def convert_chemkin_to_cantera(mechanism):
         os.chdir(starting_dir)
     mechanism.cantera_file.save(cantera_filename, _ExistingFile(os.path.join(full_mechanism_dir,cantera_filename)))
     mechanism.save()
+
+def convert_cantera_to_database(mechanism):
+    """Convert the cantera file into the database entries"""
+    pass

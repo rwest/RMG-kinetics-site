@@ -23,10 +23,11 @@
 <h3>Cantera file:</h3>
 {% if mechanism.cantera_file %}
     <a href="{{ mechanism.cantera_file.url }}"> {{ mechanism.cantera_file.name  }}</a> ({{ mechanism.cantera_file.size|filesizeformat }})
+{% if mechanism.cantera_validated %}Validated.{% else %}Failed validation.{% endif %}
+<a href="{{ mechanism.cantera_validation_log_file.url }}">View conversion log</a>.
 {% else %}
     <a href="{% url converter.views.ck2cti mechanism_id=mechanism.id %}">Convert Chemkin to Cantera</a>
-{% endif %}
-{% endif %}
-
+{% endif %}{# mechanism.cantera_file #}
+{% endif %}{# mechanism.chemkin_file #}
 
 {% endblock %}

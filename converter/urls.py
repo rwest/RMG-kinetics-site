@@ -3,10 +3,11 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns('RMG_site.converter.views',
     (r'^$', 'mechanisms_list'),
     (r'^new/$', 'new'),
-    (r'^mechanisms/(?P<mechanism_id>[^/]+)/$',           'mechanism'),
+    (r'^mechanisms/(?P<mechanism_id>[^/]+)/$', 'mechanism'),
     (r'^mechanisms/(?P<mechanism_id>[^/]+)/upload/$', 'upload'),
-    (r'^mechanisms/(?P<mechanism_id>[^/]+)/ck2cti/$',    'ck2cti'),
-    (r'^mechanisms/(?P<mechanism_id>[^/]+)/reactions/$',    'reactions'),
+    (r'^mechanisms/(?P<mechanism_id>[^/]+)/ck2cti/$', 'ck2cti'),
+    (r'^mechanisms/(?P<mechanism_id>[^/]+)/cti2db/$', 'cti2db'),
+    (r'^mechanisms/(?P<mechanism_id>[^/]+)/reactions/$', 'reactions'),
     (r'^mechanisms/(?P<mechanism_id>[^/]+)/reactions/(?P<reaction_id>\d+)$', 'reaction'),
     
 

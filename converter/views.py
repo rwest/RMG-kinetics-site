@@ -52,6 +52,12 @@ def ck2cti(request, mechanism_id):
     m = get_object_or_404(Mechanism, pk=mechanism_id) 
     converter.convert_chemkin_to_cantera(m)
     return HttpResponseRedirect(reverse('RMG_site.converter.views.mechanism',args=(m.id,)))
+    
+def cti2db(request, mechanism_id):
+    m = get_object_or_404(Mechanism, pk=mechanism_id) 
+    converter.convert_cantera_to_database(m)
+    return HttpResponseRedirect(reverse('RMG_site.converter.views.mechanism',args=(m.id,)))
+       
 
 def mechanism(request, mechanism_id):
     m = get_object_or_404(Mechanism, pk=mechanism_id) # pk is shortcut for primary key, in this case 'id'
