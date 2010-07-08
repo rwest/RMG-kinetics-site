@@ -10,22 +10,17 @@ from RMG_site.visualizer.forms import NewMechanismForm, UploadMechanismForm
 
 import visualizer
 
-
 def mechanisms_list(request):
-    all_mechanisms = Mechanism.objects.all()
-    form = NewMechanismForm()
-    return render_to_response('visualizer/mechanisms_list.html', {'mechanisms_list': all_mechanisms, 'form': form })
+    all_mechanisms = Mechanism.objects.all()    
+    if request.method == 'POST': # If the form has been submitted...
+        form = NewMechanismForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            m = form.save()
+            return HttpResponseRedirect(reverse('RMG_site.visualizer.views.mechanism',args=(m.id,)))
+    else:
+        form = NewMechanismForm() # An unbound form
+    return render_to_response('converter/mechanisms_list.html', {'mechanisms_list': all_mechanisms, 'form': form })
 
-def new(request):
-    try:
-        f = NewMechanismForm(request.POST)
-        new_mechanism = f.save()
-    except ValueError:
-        heading = "Invalid Mechanism"
-        message = "You failed to make a new mechanism"
-        if settings.DEBUG: raise
-        return render_to_response('visualizer/blank.html', {'heading':heading, 'message':message})
-    return HttpResponseRedirect(reverse('RMG_site.visualizer.views.mechanism',args=(new_mechanism.id,)))
 
 def upload(request, mechanism_id):
     try:

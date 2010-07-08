@@ -1,8 +1,7 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('RMG_site.visualizer.views',
-    (r'^$',                                     'mechanisms_list'),
-    (r'^new/$',                                'new'),
+    (r'^$', 'mechanisms_list'),
     (r'^mechanisms/(?P<mechanism_id>[^/]+)/upload/$', 'upload'),
     (r'^mechanisms/(?P<mechanism_id>[^/]+)/$',           'mechanism'),
     (r'^mechanisms/(?P<mechanism_id>[^/]+)/ck2cti/$',    'ck2cti'),
