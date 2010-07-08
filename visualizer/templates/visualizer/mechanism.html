@@ -13,8 +13,16 @@
 {% if mechanism.chemkin_file and mechanism.dictionary_file %}
 <li><a href="{{ mechanism.chemkin_file.url }}"> {{ mechanism.chemkin_file.name  }}</a> ({{ mechanism.chemkin_file.size|filesizeformat }})
 <li><a href="{{ mechanism.dictionary_file.url }}"> {{ mechanism.dictionary_file.name  }}</a> ({{ mechanism.dictionary_file.size|filesizeformat }})
+{% else %}{# no mechanism.chemkin_file and mechanism.dictionary_file #}
+<form enctype="multipart/form-data" method="post" action="{% url visualizer.views.upload  mechanism_id=mechanism.id %}">
+<table>
+{{ form.as_table }}
+</table>
+<input type="submit">
+{% endif %}{# no mechanism.chemkin_file and mechanism.dictionary_file #}
 
 
+{% if mechanism.chemkin_file %}
 <h3>Cantera file:</h3>
 {% if mechanism.cantera_file %}
 <a href="{{ mechanism.cantera_file.url }}"> {{ mechanism.cantera_file.name  }}</a> ({{ mechanism.cantera_file.size|filesizeformat }})
@@ -23,14 +31,15 @@
 {% else %}{# no mechanism.cantera_file #}
 <a href="{% url visualizer.views.ck2cti mechanism_id=mechanism.id %}">Convert Chemkin to Cantera</a>
 {% endif %}{# no mechanism.cantera_file #}
-
-{% else %}{# no mechanism.chemkin_file #}
-<form enctype="multipart/form-data" method="post" action="{% url visualizer.views.upload  mechanism_id=mechanism.id %}">
-<table>
-{{ form.as_table }}
-</table>
-<input type="submit">
 {% endif %}{# no mechanism.chemkin_file #}
 
+{% if mechanism.dictionary_file %}
+<h3>Species structures:</h3>
+{% if mechanism.pictures_drawn %}
+<a href="/media/visualizer/{{ mechanism.id }}/pics/">View pictures</a>
+{% else %}{# no pictures_drawn #}
+<a href="{% url visualizer.views.draw_species mechanism_id=mechanism.id %}">Draw pictures</a>
+{% endif %}{# no pictures_drawn #}
+{% endif %}{# no mechanism.dictionary_file #}
 
 {% endblock %}

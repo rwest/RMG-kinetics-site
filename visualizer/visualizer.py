@@ -16,7 +16,8 @@ package_path = os.path.join( os.path.split(os.path.realpath(__file__))[0],'pytho
 if os.path.exists(package_path):
     sys.path.insert(1,package_path) 
 
-def drawMolecules(RMG_results):
+
+def draw_species(mechanism):
     """Draw pictures of each of the molecules in the RMG dictionary.
     
     Also creates MolarMasses.txt. Puts its results inside RMG_results directory.
@@ -29,6 +30,10 @@ def drawMolecules(RMG_results):
     # Noel M O'Boyle, Chris Morley and Geoffrey R Hutchison
     # Chemistry Central Journal 2008, 2:5
     # doi:10.1186/1752-153X-2-5
+    
+    mechanism_dir, infile = os.path.split(mechanism.dictionary_file.name)
+    full_mechanism_dir = os.path.realpath(os.path.join(settings.MEDIA_ROOT, mechanism_dir))
+    RMG_results = full_mechanism_dir
     
     picfolder=os.path.join(RMG_results,'pics')
     pdffolder=os.path.join(RMG_results,'pdfs')
@@ -109,8 +114,8 @@ def drawMolecules(RMG_results):
         if pymol.OBMol.NumHvyAtoms()>1:
             pymol.removeh()
         pymol.draw(filename=os.path.join(picfolder,name+'.png'), update=True, show=False)
-        pymol.draw(filename=os.path.join(pdffolder,name+'.pdf'), update=False, show=False)
-        pymol.write(format='mol',filename=os.path.join(molfolder,name+'.mol'),overwrite=True)
+        #pymol.draw(filename=os.path.join(pdffolder,name+'.pdf'), update=False, show=False)
+        #pymol.write(format='mol',filename=os.path.join(molfolder,name+'.mol'),overwrite=True)
         
         masses.write(name+'\t'+str(pymol.exactmass)+'\n')
 
@@ -118,6 +123,8 @@ def drawMolecules(RMG_results):
         smiless[name] = smiles
     masses.close()
     RMGfile.close()
+    mechanism.pictures_drawn = True
+    mechanism.save()
     return chemkin_formulae, smiless
 
 def convert_chemkin_to_cantera(mechanism):

@@ -5,6 +5,7 @@ urlpatterns = patterns('RMG_site.visualizer.views',
     (r'^mechanisms/(?P<mechanism_id>[^/]+)/upload/$', 'upload'),
     (r'^mechanisms/(?P<mechanism_id>[^/]+)/$',           'mechanism'),
     (r'^mechanisms/(?P<mechanism_id>[^/]+)/ck2cti/$',    'ck2cti'),
+    (r'^mechanisms/(?P<mechanism_id>[^/]+)/draw_species/$', 'draw_species'),
     (r'^mechanisms/(?P<mechanism_id>[^/]+)/reactions/$',    'reactions'),
     (r'^mechanisms/(?P<mechanism_id>[^/]+)/reactions/(?P<reaction_id>\d+)$', 'reaction'),
     

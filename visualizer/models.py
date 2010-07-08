@@ -11,6 +11,7 @@ class Mechanism(models.Model):
     cantera_file = models.FileField(upload_to=upload_to)
     cantera_validated = models.BooleanField()
     cantera_validation_log_file = models.FileField(upload_to=upload_to)
+    pictures_drawn = models.BooleanField()
     
     def __unicode__(self):
         return self.name

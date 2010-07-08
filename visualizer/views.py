@@ -19,7 +19,7 @@ def mechanisms_list(request):
             return HttpResponseRedirect(reverse('RMG_site.visualizer.views.mechanism',args=(m.id,)))
     else:
         form = NewMechanismForm() # An unbound form
-    return render_to_response('converter/mechanisms_list.html', {'mechanisms_list': all_mechanisms, 'form': form })
+    return render_to_response('visualizer/mechanisms_list.html', {'mechanisms_list': all_mechanisms, 'form': form })
 
 
 def upload(request, mechanism_id):
@@ -38,6 +38,12 @@ def ck2cti(request, mechanism_id):
     m = get_object_or_404(Mechanism, pk=mechanism_id) 
     visualizer.convert_chemkin_to_cantera(m)
     return HttpResponseRedirect(reverse('RMG_site.visualizer.views.mechanism',args=(m.id,)))
+    
+def draw_species(request, mechanism_id):
+    m = get_object_or_404(Mechanism, pk=mechanism_id) 
+    visualizer.draw_species(m)
+    return HttpResponseRedirect(reverse('RMG_site.visualizer.views.mechanism',args=(m.id,)))
+    
 
 def mechanism(request, mechanism_id):
     m = get_object_or_404(Mechanism, pk=mechanism_id) # pk is shortcut for primary key, in this case 'id'
