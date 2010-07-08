@@ -6,7 +6,7 @@ Postprocess a load of RMG Results
 import os, sys, shutil, re
 
 # Django stuff for web version
-from models import Mechanism, Reaction, Species, Stoichiometry
+from models import Mechanism, Reaction, Species, Reactants, Products
 from django.conf import settings
 from django.core.files import File
 from RMG_site.converter.django_utils import _ExistingFile # should put somewhere better
@@ -269,15 +269,9 @@ def convertFinalModel2MixMaster(RMG_results):
     return True
     
 
-def makeTableOfReactions(RMG_results, chemkin_formulae, smiless ):
-    """Make a pretty table of reactions"""
-    
-    filename='chem.cti'
-    filepath = os.path.join(RMG_results,'chemkin',filename)
-    outfilepath = os.path.join(RMG_results,'ReactionList.html')
-    
-    print "Making a table of reactions in %s"%outfilepath
-    
+def convert_cantera_to_database(mechanism):
+    """Convert the cantera file into the database entries"""
+
     import ctml_writer
     #from ctml_writer import * 
     # if you're not allowed to import * then you'll need at least these:
@@ -297,191 +291,35 @@ def makeTableOfReactions(RMG_results, chemkin_formulae, smiless ):
     ctml_writer._valexport = ''
     ctml_writer._valfmt = ''
     
-    import jinja2
-    #env = jinja2.Environment(loader = jinja2.FileSystemLoader('templates'))
-    #template = env.get_template('rxnlist.html')
-    template = jinja2.Template("""
-    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
-    <html lang="en">
-    <head>
-        <title>{{ title }}</title>
-    <style>
-    body {
-    background-color: #ffffff;
-    color: #111;
-    font-size: 12px;
-    font-family: Verdana, Arial, SunSans-Regular, Sans-Serif;
-    }
-    
-    table.reactionList {
-    	border-collapse: collapse;
-    	font-size: 16px;
-    	clear: both;
-    	width: 100%;
-    }
-    
-    
-    tr.reactionRow td{
-    	border-top:1px solid #111;
-    }
-    
-    .residuals {
-    	font-size: 10px;
-    	float:left;
-    }
-    
-    table.groupList {
-    	clear:both;
-    	font-size: 10px;
-    	border: 1px solid #111;
-    	width: 100%;
-    }
-    tr.groupRow td {
-    	border-bottom-width: 0px;
-    }
-    
-    tr.unmatchedAtomsRow td {
-    	border-bottom-width: 0px;
-    }
-    
-    table.multimatchedAtomsList {
-    	font-size: 10px;
-    	border: 1px solid #111;
-    	width: 100%;
-    	background: #fb8;
-    }
-    
-    tr.multimatchedAtomsRow td {
-    	border-bottom: 1px solid #111;
-    }
-    
-    img.speciesPic {
-    	vertical-align: middle;
-    	max-width: 150px;
-    	max-height: 150px;
-    }
-    td.speciesPic {
-    	text-align: center;
-    }
-    td.reactionSide{
-    	vertical-align: middle;
-    	text-align: center;
-    }
-    td.reactionComment{
-    	font-size: small;
-    }
-    .family_selector{
-        border: 1px solid black;
-        padding: 0.3em;
-        margin: 0.3em;
-        display: block;
-        width: 22%;
-        float: left;
-        background-color: #eee;
-    }
-    .family_selector_hidden{
-        color: gray;
-        border-color: gray;
-        background-color: #fff;
-    }
-    .species_formula{
-        color: #bbb;
-        font-size: small;
-        position: relative;
-    }
-
-    </style>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
-    <script type="text/javascript" src="http://web.mit.edu/rwest/www/jquery-qtip-1.0.0-rc3112605/jquery.qtip-1.0.0-rc3.min.js">/*This version of qtip only works with jquery 1.4.1, not 1.4.2*/</script>
-    <script type="text/javascript">
-    // JQuery documentation is at http://docs.jquery.com/
- $(document).ready(function(){
-   //  repeat for all selectors
-   $("#selectors").find("span").each( function(i) {
-       var family = this.id;
-     // doesn't help:  family = family.replace(/[#;&,.+*~':"!^$[\]()=>|\/]/g, "\\\\$&"); // escape the funny characters with \\
-       $("#"+family).toggle(function(){
-         $("."+family).fadeOut('slow');
-         $("#"+family).addClass("family_selector_hidden");
-       },function(){
-         $("."+family).fadeIn('fast');
-         $("#"+family).removeClass("family_selector_hidden");
-       });
-       $("#"+family).addClass("family_selector");
-   } );
-   
-   {% for species in smiless %}
-   $('img[title={{species}}]').qtip({ position: { corner: { target: 'bottomMiddle', tooltip: 'topMiddle' }},
-      content: {title: '{{species}} ({{chemkin_formulae[species]}})', text:'{{smiless[species]}}', url: 'http://cactus.nci.nih.gov/chemical/structure/{{smiless[species]}}/names'}
-   }){% endfor %}
-   
- });
- 
-    </script>
-    </head>
-    
-    <body>
-    <h1>{{ title }}</h1>
-    <h2>{{ reactionList|length }} reactions</h2>
-
-    <div id='selectors'>
-        {% for family in families %}
-        <span id='{{ family|replace(',','_')|replace('+','_') }}'>{{ family }}</span>
-        {% endfor %}
-        <span id='reactionComment'>Comments</span>
-        <span id='species_formula'>Species Formulae</span>
-    </div>
-        
-    <table class="reactionList">
-    {% for reaction in reactionList %}
-     <tr class="reactionRow {{ reaction.family|replace(',','') }}">
-     <td class="reactionNumber"> {{ reaction._num }} </td>
-      <td class="reactionSide">
-       {% for species in reaction._r %}
-        {% if reaction._r[species]!=1 %}{{ reaction._r[species]|int }}{% endif %}
-        <img src="pics/{{ species }}.png" class="speciesPic" alt="{{ species }}" title="{{ species }}">
-        <span class="species_formula">{{chemkin_formulae[species]}}</span>
-        {% if not loop.last %} + {% endif %}
-       {% endfor %}
-      </td>
-      <td>=</td>
-      <td class="reactionSide">
-       {% for species in reaction._p %}
-        {% if reaction._p[species]!=1 %}{{ reaction._p[species]|int  }}{% endif %}
-        <img src="pics/{{ species }}.png" class="speciesPic" alt="{{ species }}" title="{{ species }}">
-        <span class="species_formula">{{chemkin_formulae[species]}}</span>
-        {% if not loop.last %} + {% endif %}
-       {% endfor %}
-      </td>
-      <td>
-        {% if reaction._kf|length == 2 %}
-        {% for kf in reaction._kf %}
-        {{ '%.2g, %.2g, %.2g'|format(*kf)}} {% if not loop.last %}<br />{% endif %}
-        {% endfor %}
-        {% endif%}
-        {% if reaction._kf|length == 3 %}
-        {{ '%.2g, %.2g, %.2g'|format(*reaction._kf)}}
-        {% endif %}
-      </td>
-     </tr>
-     <tr class="{{ reaction.family|replace(',','') }}">
-      <td></td>
-      <td colspan="4" class="reactionComment">
-      {{ reaction.comment }}
-      </td>
-     </tr>
-    {% endfor %}
-    </table>
-    
-    </body>
-    </html>
-    """)
-
-    execfile(filepath)
+    mechanism.cantera_file.open()
+    cti_file = mechanism.cantera_file.read()
+    mechanism.cantera_file.close()
+    #local_context = { '__builtins__':None,
+    #                  '_rates': _rates,
+    #                  'rate': rate,
+    #                  'Arrhenius':Arrhenius,
+    #                  'Parameter':Parameter,
+    #                }
+    #global_context = {'__builtins__':None,
+    # TODO: check library_file is safe. Perhaps with http://code.activestate.com/recipes/496746-restricted-safe-eval/
+    # although I think limiting the context as above may be ample protection
+    # for now lets be unsafe:
+    local_context = locals()
+    global_context = globals()
+    try:
+        exec cti_file in global_context, local_context
+    except NameError, e:
+        logging.error("Looks like the file %s had an illegal operator in it:"%mechanism.cantera_file.name )
+        logging.error(e)
+        raise
+    #finally:
+    #    mechanism.cantera_file.close()
+    # _rates = local_context['_rates']
     
     comments=list()
     next_line_is_reaction = False
-    for line in file(filepath):
+    mechanism.cantera_file.open()
+    for line in mechanism.cantera_file:
         if not line.startswith('#'): continue
         if next_line_is_reaction:
             comments.append(line[2:].strip())
@@ -490,7 +328,9 @@ def makeTableOfReactions(RMG_results, chemkin_formulae, smiless ):
             reaction_number = line.split()[-1]
         else: 
             next_line_is_reaction = False
+    mechanism.cantera_file.close()
     assert len(comments) == len(ctml_writer._reactions)
+    
     families = set()
     for i,comment in enumerate(comments):
         ctml_writer._reactions[i].comment = comment
@@ -499,16 +339,32 @@ def makeTableOfReactions(RMG_results, chemkin_formulae, smiless ):
         families.add(family)
         #import pdb; pdb.set_trace()
 
+    # add species to the django database
+    for i,s in enumerate(ctml_writer._species):
+        try: # check if it's already there
+            S = Species.objects.get(mechanism=mechanism, name=s._name)
+        except Species.DoesNotExist:
+            S = Species(mechanism=mechanism, name=s._name)
+        S.number = i+1
+       # S.atoms = repr(s._atoms) # s._atoms is a dict
+       # S.unidentified_species=99
+        S.save()
+        
+    # add reactions to the django database
+    for i,r in enumerate(ctml_writer._reactions):
+        R = Reaction(number=i+1, mechanism=mechanism)
+        R.equation=r._e
+        R.unidentified_species=99
+        R.reaction_family = r.family
+        R.comment = r.comment
+        R.save() # we need a reaction.id before we can add the stoichiometry info
+        for reactant,stoich in r._r.iteritems():
+            R.reactants_set.create(species=Species.objects.get(name=reactant, mechanism=mechanism), stoichiometry=stoich)
+        for product,stoich in r._p.iteritems():
+            R.products_set.create(species=Species.objects.get(name=product, mechanism=mechanism), stoichiometry=stoich)
     
-    title  = "%s (%s)"%(filename,ctml_writer._phases[0]._name)
-    outstring=template.render(title=title,
-                              reactionList=ctml_writer._reactions,
-                              families=families,
-                              chemkin_formulae=chemkin_formulae,
-                              smiless=smiless)
-    outfile=file(outfilepath,'w')
-    outfile.write(outstring)
-    outfile.close()
+    mechanism.reactions_imported = True
+    mechanism.save()
 
 def loadMixMaster(RMG_results):
     """Load MixMaster"""

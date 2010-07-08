@@ -33,6 +33,17 @@
 {% endif %}{# no mechanism.cantera_file #}
 {% endif %}{# no mechanism.chemkin_file #}
 
+
+{% if mechanism.cantera_file %}
+<h3>Reaction database:</h3>
+{% if mechanism.reactions_imported %}
+<a href="{% url visualizer.views.reactions mechanism_id=mechanism.id %}">View reactions list</a>.
+{% else %}{# no mechanism.reactions_imported #}
+<a href="{% url visualizer.views.cti2db mechanism_id=mechanism.id %}">Convert Cantera file to database entries</a>.
+{% endif %}{# no mechanism.reactions_imported #}
+{% endif %}{# no mechanism.cantera_file #}
+
+
 {% if mechanism.dictionary_file %}
 <h3>Species structures:</h3>
 {% if mechanism.pictures_drawn %}
@@ -41,5 +52,6 @@
 <a href="{% url visualizer.views.draw_species mechanism_id=mechanism.id %}">Draw pictures</a>
 {% endif %}{# no pictures_drawn #}
 {% endif %}{# no mechanism.dictionary_file #}
+
 
 {% endblock %}

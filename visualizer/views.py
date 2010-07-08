@@ -11,6 +11,16 @@ from RMG_site.visualizer.forms import NewMechanismForm, UploadMechanismForm
 import visualizer
 
 def mechanisms_list(request):
+    """
+    Displays list of existing mechanisms and a form to create a new one.
+
+    Templates: :template:`visualizer/mechanisms_list.html`,
+    Context:
+        mechanisms_list
+            the list of all mechanisms
+        form
+            the form for creating a new mechanism
+    """
     all_mechanisms = Mechanism.objects.all()    
     if request.method == 'POST': # If the form has been submitted...
         form = NewMechanismForm(request.POST) # A form bound to the POST data
@@ -43,7 +53,11 @@ def draw_species(request, mechanism_id):
     m = get_object_or_404(Mechanism, pk=mechanism_id) 
     visualizer.draw_species(m)
     return HttpResponseRedirect(reverse('RMG_site.visualizer.views.mechanism',args=(m.id,)))
-    
+
+def cti2db(request, mechanism_id):
+    m = get_object_or_404(Mechanism, pk=mechanism_id) 
+    visualizer.convert_cantera_to_database(m)
+    return HttpResponseRedirect(reverse('RMG_site.visualizer.views.mechanism',args=(m.id,)))
 
 def mechanism(request, mechanism_id):
     m = get_object_or_404(Mechanism, pk=mechanism_id) # pk is shortcut for primary key, in this case 'id'
@@ -53,8 +67,7 @@ def mechanism(request, mechanism_id):
 def reactions(request, mechanism_id):
     m = get_object_or_404(Mechanism, pk=mechanism_id)
     reactions = get_list_or_404(Reaction, mechanism=m)
-
-    return HttpResponse("You're looking at the reactions of mechanism %s. %s" % (mechanism_name, reactions ))
+    return HttpResponse("You're looking at the reactions of mechanism %s. %s" % (m.name, reactions ))
 
 def reaction(request, mechanism_name, reaction_id):
     return HttpResponse("You're editing reaction %s of mechanism %s." % (reaction_id,mechanism_name))
