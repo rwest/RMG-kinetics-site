@@ -1,4 +1,4 @@
-from RMG_site.visualizer.models import Mechanism
+from RMG_site.visualizer.models import Mechanism, Reaction, Species
 from django.contrib import admin
 
 
@@ -7,3 +7,7 @@ class MechanismAdmin(admin.ModelAdmin):
     list_display = ('name', 'chemkin_file', 'dictionary_file')
 
 admin.site.register(Mechanism, MechanismAdmin)
+
+admin.site.register(Reaction)
+
+admin.site.register(Species)
