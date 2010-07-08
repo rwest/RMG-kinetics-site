@@ -121,6 +121,15 @@ def draw_species(mechanism):
 
         chemkin_formulae[name]=chemkinformula
         smiless[name] = smiles
+        
+        # add species to the django database
+        try: # check if it's already there
+            S = Species.objects.get(mechanism=mechanism, name=name)
+        except Species.DoesNotExist:
+            S = Species(mechanism=mechanism, name=name, number=0)
+        S.smiles = smiles
+        S.save()
+    
     masses.close()
     RMGfile.close()
     mechanism.pictures_drawn = True

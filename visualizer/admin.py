@@ -10,4 +10,7 @@ admin.site.register(Mechanism, MechanismAdmin)
 
 admin.site.register(Reaction)
 
-admin.site.register(Species)
+class SpeciesAdmin(admin.ModelAdmin):
+    fields = ['number', 'name', 'smiles']
+    list_display = ('number', 'name', 'smiles')
+admin.site.register(Species, SpeciesAdmin)

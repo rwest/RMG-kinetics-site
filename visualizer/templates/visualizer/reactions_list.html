@@ -1,0 +1,147 @@
+{% extends "rmg_base.html" %}
+
+{% block title %}{{ mechanism.name }} Reactions{% endblock %}
+{% block page_heading %}{{ mechanism.name }} Reactions{% endblock %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="/visualizer/media/visualizer.css" type="text/css">
+<link rel="stylesheet" href="/visualizer/media/visualizer.css" type="text/css">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://web.mit.edu/rwest/www/jquery-qtip-1.0.0-rc3112605/jquery.qtip-1.0.0-rc3.min.js">/*This version of qtip only works with jquery 1.4.1, not 1.4.2*/</script>
+    <script type="text/javascript">
+    // JQuery documentation is at http://docs.jquery.com/
+ $(document).ready(function(){
+   //  repeat for all selectors
+   $("#selectors").find("span").each( function(i) {
+       var family = this.id;
+     // doesn't help:  family = family.replace(/[#;&,.+*~':"!^$[\]()=>|\/]/g, "\\\\$&"); // escape the funny characters with \\
+       $("#"+family).toggle(function(){
+         $("."+family).fadeOut('slow');
+         $("#"+family).addClass("family_selector_hidden");
+       },function(){
+         $("."+family).fadeIn('fast');
+         $("#"+family).removeClass("family_selector_hidden");
+       });
+       $("#"+family).addClass("family_selector");
+   } );
+   
+   {% for species in m.species_set %}
+   $('img[title={{species}}]').qtip({ position: { corner: { target: 'bottomMiddle', tooltip: 'topMiddle' }},
+      content: {title: '{{species}} (formula)', text:'{{species.smiles}}', url: 'http://cactus.nci.nih.gov/chemical/structure/{{species.smiles}}/names'}
+   }){% endfor %}
+   
+ });
+ 
+</script>
+
+{% endblock %}
+
+{% block navbar_items %}<li><a href="{% url visualizer.views.mechanisms_list %}">Visualizer</a> &raquo;</li>
+<li><a href="{% url visualizer.views.mechanism mechanism_id=mechanism.id %}">{{ mechanism.name }}</a> &raquo;</li>{% endblock %}
+
+{% block page_body %}
+
+    <h1>{{ title }}</h1>
+    <h2>{{ reactionList|length }} reactions</h2>
+
+    <div id='selectors'>
+        {% for family in families %}
+        <span id='{{ family|replace(',','_')|replace('+','_') }}'>{{ family }}</span>
+        {% endfor %}
+        <span id='reactionComment'>Comments</span>
+        <span id='species_formula'>Species Formulae</span>
+    </div>
+        
+    <table class="reactionList">
+    {% for reaction in reactionList %}
+     <tr class="reactionRow {{ reaction.family|replace(',','') }}">
+     <td class="reactionNumber"> {{ reaction._num }} </td>
+      <td class="reactionSide">
+       {% for species in reaction._r %}
+        {% if reaction._r[species]!=1 %}{{ reaction._r[species]|int }}{% endif %}
+        <img src="pics/{{ species }}.png" class="speciesPic" alt="{{ species }}" title="{{ species }}">
+        <span class="species_formula">{{chemkin_formulae[species]}}</span>
+        {% if not loop.last %} + {% endif %}
+       {% endfor %}
+      </td>
+      <td>=</td>
+      <td class="reactionSide">
+       {% for species in reaction._p %}
+        {% if reaction._p[species]!=1 %}{{ reaction._p[species]|int  }}{% endif %}
+        <img src="pics/{{ species }}.png" class="speciesPic" alt="{{ species }}" title="{{ species }}">
+        <span class="species_formula">{{chemkin_formulae[species]}}</span>
+        {% if not loop.last %} + {% endif %}
+       {% endfor %}
+      </td>
+      <td>
+        {% if reaction._kf|length == 2 %}
+        {% for kf in reaction._kf %}
+        {{ '%.2g, %.2g, %.2g'|format(*kf)}} {% if not loop.last %}<br />{% endif %}
+        {% endfor %}
+        {% endif%}
+        {% if reaction._kf|length == 3 %}
+        {{ '%.2g, %.2g, %.2g'|format(*reaction._kf)}}    <h1>{{ title }}</h1>
+    <h2>{{ reactionList|length }} reactions</h2>
+
+    <div id='selectors'>
+        {% for family in families %}
+        <span id='{{ family|replace(',','_')|replace('+','_') }}'>{{ family }}</span>
+        {% endfor %}
+        <span id='reactionComment'>Comments</span>
+        <span id='species_formula'>Species Formulae</span>
+    </div>
+        
+    <table class="reactionList">
+    {% for reaction in reactionList %}
+     <tr class="reactionRow {{ reaction.family|replace(',','') }}">
+     <td class="reactionNumber"> {{ reaction._num }} </td>
+      <td class="reactionSide">
+       {% for species in reaction._r %}
+        {% if reaction._r[species]!=1 %}{{ reaction._r[species]|int }}{% endif %}
+        <img src="pics/{{ species }}.png" class="speciesPic" alt="{{ species }}" title="{{ species }}">
+        <span class="species_formula">{{chemkin_formulae[species]}}</span>
+        {% if not loop.last %} + {% endif %}
+       {% endfor %}
+      </td>
+      <td>=</td>
+      <td class="reactionSide">
+       {% for species in reaction._p %}
+        {% if reaction._p[species]!=1 %}{{ reaction._p[species]|int  }}{% endif %}
+        <img src="pics/{{ species }}.png" class="speciesPic" alt="{{ species }}" title="{{ species }}">
+        <span class="species_formula">{{chemkin_formulae[species]}}</span>
+        {% if not loop.last %} + {% endif %}
+       {% endfor %}
+      </td>
+      <td>
+        {% if reaction._kf|length == 2 %}
+        {% for kf in reaction._kf %}
+        {{ '%.2g, %.2g, %.2g'|format(*kf)}} {% if not loop.last %}<br />{% endif %}
+        {% endfor %}
+        {% endif%}
+        {% if reaction._kf|length == 3 %}
+        {{ '%.2g, %.2g, %.2g'|format(*reaction._kf)}}
+        {% endif %}
+      </td>
+     </tr>
+     <tr class="{{ reaction.family|replace(',','') }}">
+      <td></td>
+      <td colspan="4" class="reactionComment">
+      {{ reaction.comment }}
+      </td>
+     </tr>
+    {% endfor %}
+    </table>
+        {% endif %}
+      </td>
+     </tr>
+     <tr class="{{ reaction.family|replace(',','') }}">
+      <td></td>
+      <td colspan="4" class="reactionComment">
+      {{ reaction.comment }}
+      </td>
+     </tr>
+    {% endfor %}
+    </table>
+    
+
+{% endblock %}
