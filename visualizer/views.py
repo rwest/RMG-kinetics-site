@@ -1,6 +1,6 @@
 # Create your views here.
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.template import Context, loader
+from django.template import Context, loader, RequestContext
 from django.shortcuts import render_to_response, get_object_or_404, get_list_or_404
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -29,7 +29,9 @@ def mechanisms_list(request):
             return HttpResponseRedirect(reverse('RMG_site.visualizer.views.mechanism',args=(m.id,)))
     else:
         form = NewMechanismForm() # An unbound form
-    return render_to_response('visualizer/mechanisms_list.html', {'mechanisms_list': all_mechanisms, 'form': form })
+    return render_to_response('visualizer/mechanisms_list.html',
+        {'mechanisms_list': all_mechanisms, 'form': form },
+        context_instance=RequestContext(request))
 
 
 def upload(request, mechanism_id):
@@ -66,8 +68,15 @@ def mechanism(request, mechanism_id):
 
 def reactions(request, mechanism_id):
     m = get_object_or_404(Mechanism, pk=mechanism_id)
-    reactions = get_list_or_404(Reaction, mechanism=m)
-    return HttpResponse("You're looking at the reactions of mechanism %s. %s" % (m.name, reactions ))
+    reactions_list = get_list_or_404(Reaction, mechanism=m)
+    return render_to_response('visualizer/reactions_list.html', 
+        {'mechanism': m, 'reactions_list': reactions_list},
+        context_instance=RequestContext(request))
+    #return HttpResponse("You're looking at the reactions of mechanism %s. %s" % (m.name, reactions_list ))
 
-def reaction(request, mechanism_name, reaction_id):
-    return HttpResponse("You're editing reaction %s of mechanism %s." % (reaction_id,mechanism_name))
+def reaction(request, mechanism_id, reaction_number):
+    return HttpResponse("You're editing reaction %s of mechanism %s." % (reaction_number,mechanism_id))
+    
+def species(request, mechanism_id, species_number):
+    return HttpResponse("You're editing species %s of mechanism %s." % (species_number,mechanism_id))
+    
