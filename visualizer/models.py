@@ -50,8 +50,12 @@ class Reactants(models.Model):
     reaction = models.ForeignKey(Reaction)
     species = models.ForeignKey(Species)
     stoichiometry = models.IntegerField()
+    def __unicode__(self):
+        return self.species.name+":"+str(self.stoichiometry)
     
 class Products(models.Model):
     reaction = models.ForeignKey(Reaction)
     species = models.ForeignKey(Species)
     stoichiometry = models.IntegerField()
+    def __unicode__(self):
+        return self.species.name+":"+str(self.stoichiometry)

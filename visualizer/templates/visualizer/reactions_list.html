@@ -5,7 +5,7 @@
 
 {% block extrahead %}
 <link rel="stylesheet" href="/visualizer/media/visualizer.css" type="text/css">
-<link rel="stylesheet" href="/visualizer/media/visualizer.css" type="text/css">
+<link rel="stylesheet" href="/visualizer/media/reactions_list.css" type="text/css">
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://web.mit.edu/rwest/www/jquery-qtip-1.0.0-rc3112605/jquery.qtip-1.0.0-rc3.min.js">/*This version of qtip only works with jquery 1.4.1, not 1.4.2*/</script>
     <script type="text/javascript">
@@ -25,15 +25,14 @@
        $("#"+family).addClass("family_selector");
    } );
    
-   {% for species in m.species_set %}
-   $('img[title={{species}}]').qtip({ position: { corner: { target: 'bottomMiddle', tooltip: 'topMiddle' }},
-      content: {title: '{{species}} (formula)', text:'{{species.smiles}}', url: 'http://cactus.nci.nih.gov/chemical/structure/{{species.smiles}}/names'}
+   {% for s in m.species_set %}
+   $('img[title={{s.name}}]').qtip({ position: { corner: { target: 'bottomMiddle', tooltip: 'topMiddle' }},
+      content: {title: '{{s.name}} (formula)', text:'{{s.smiles}}', url: 'http://cactus.nci.nih.gov/chemical/structure/{{s.smiles}}/names'}
    }){% endfor %}
    
  });
  
 </script>
-
 {% endblock %}
 
 {% block navbar_items %}<li><a href="{% url visualizer.views.mechanisms_list %}">Visualizer</a> &raquo;</li>
@@ -42,88 +41,49 @@
 {% block page_body %}
 
     <h1>{{ title }}</h1>
-    <h2>{{ reactionList|length }} reactions</h2>
+    <h2>{{ reactions_list|length }} reactions</h2>
 
     <div id='selectors'>
-        {% for family in families %}
-        <span id='{{ family|replace(',','_')|replace('+','_') }}'>{{ family }}</span>
+        {% for family in families_list %}
+        <span id='{{ family|slugify }}'>{{ family }}</span>
         {% endfor %}
         <span id='reactionComment'>Comments</span>
         <span id='species_formula'>Species Formulae</span>
     </div>
-        
     <table class="reactionList">
-    {% for reaction in reactionList %}
-     <tr class="reactionRow {{ reaction.family|replace(',','') }}">
-     <td class="reactionNumber"> {{ reaction._num }} </td>
+    {% for reaction in reactions_list %}
+     <tr class="reactionRow {{ reaction.family|slugify }}">
+     <td class="reactionNumber"> {{ reaction.number }} </td>
       <td class="reactionSide">
-       {% for species in reaction._r %}
-        {% if reaction._r[species]!=1 %}{{ reaction._r[species]|int }}{% endif %}
-        <img src="pics/{{ species }}.png" class="speciesPic" alt="{{ species }}" title="{{ species }}">
-        <span class="species_formula">{{chemkin_formulae[species]}}</span>
-        {% if not loop.last %} + {% endif %}
-       {% endfor %}
-      </td>
-      <td>=</td>
-      <td class="reactionSide">
-       {% for species in reaction._p %}
-        {% if reaction._p[species]!=1 %}{{ reaction._p[species]|int  }}{% endif %}
-        <img src="pics/{{ species }}.png" class="speciesPic" alt="{{ species }}" title="{{ species }}">
-        <span class="species_formula">{{chemkin_formulae[species]}}</span>
-        {% if not loop.last %} + {% endif %}
-       {% endfor %}
-      </td>
-      <td>
-        {% if reaction._kf|length == 2 %}
-        {% for kf in reaction._kf %}
-        {{ '%.2g, %.2g, %.2g'|format(*kf)}} {% if not loop.last %}<br />{% endif %}
-        {% endfor %}
-        {% endif%}
-        {% if reaction._kf|length == 3 %}
-        {{ '%.2g, %.2g, %.2g'|format(*reaction._kf)}}    <h1>{{ title }}</h1>
-    <h2>{{ reactionList|length }} reactions</h2>
-
-    <div id='selectors'>
-        {% for family in families %}
-        <span id='{{ family|replace(',','_')|replace('+','_') }}'>{{ family }}</span>
-        {% endfor %}
-        <span id='reactionComment'>Comments</span>
-        <span id='species_formula'>Species Formulae</span>
-    </div>
-        
-    <table class="reactionList">
-    {% for reaction in reactionList %}
-     <tr class="reactionRow {{ reaction.family|replace(',','') }}">
-     <td class="reactionNumber"> {{ reaction._num }} </td>
-      <td class="reactionSide">
-       {% for species in reaction._r %}
-        {% if reaction._r[species]!=1 %}{{ reaction._r[species]|int }}{% endif %}
-        <img src="pics/{{ species }}.png" class="speciesPic" alt="{{ species }}" title="{{ species }}">
-        <span class="species_formula">{{chemkin_formulae[species]}}</span>
-        {% if not loop.last %} + {% endif %}
-       {% endfor %}
-      </td>
-      <td>=</td>
-      <td class="reactionSide">
-       {% for species in reaction._p %}
-        {% if reaction._p[species]!=1 %}{{ reaction._p[species]|int  }}{% endif %}
-        <img src="pics/{{ species }}.png" class="speciesPic" alt="{{ species }}" title="{{ species }}">
-        <span class="species_formula">{{chemkin_formulae[species]}}</span>
-        {% if not loop.last %} + {% endif %}
-       {% endfor %}
-      </td>
-      <td>
-        {% if reaction._kf|length == 2 %}
-        {% for kf in reaction._kf %}
-        {{ '%.2g, %.2g, %.2g'|format(*kf)}} {% if not loop.last %}<br />{% endif %}
-        {% endfor %}
-        {% endif%}
-        {% if reaction._kf|length == 3 %}
-        {{ '%.2g, %.2g, %.2g'|format(*reaction._kf)}}
+       {% for reactant in reaction.reactants_set.all %}
+        {% if reactant.stoichiometry != 1 %}{{ reactant.stoichiometry|floatformat }}{% endif %}
+        {% if reactant.species.identified %}
+        <img src="/media/visualizer/{{ mechanism.id }}/pics/{{ reactant.species.name }}.png" class="speciesPic" alt="{{ reactant.species.name }}" title="{{ reactant.species.name }}">
+        {% else %}
+        <a href="{% url visualizer.views.species mechanism_id=mechanism.id species_number=reactant.species.number %}"><span class="unidentified">{{ reactant.species.name }}</span></a>
         {% endif %}
+        <span class="species_formula">{{ reactant.species.name }}</span>
+        {% if not forloop.last %} + {% endif %}
+       {% endfor %}
+      </td>
+      <td>=</td>
+      <td class="reactionSide">
+       {% for product in reaction.reactants_set.all %}
+        {% if product.stoichiometry != 1 %}{{ product.stoichiometry|floatformat }}{% endif %}
+        {% if product.species.identified %}
+        <img src="/media/visualizer/{{ mechanism.id }}/pics/{{ product.species.name }}.png" class="speciesPic" alt="{{ product.species.name }}" title="{{ product.species.name }}">
+        {% else %}
+        <a href="{% url visualizer.views.species mechanism_id=mechanism.id species_number=product.species.number %}"><span class="unidentified">{{ product.species.name }}</span></a>
+        {% endif %}
+        <span class="species_formula">{{ product.species.name }}</span>
+        {% if not forloop.last %} + {% endif %}
+       {% endfor %}
+      </td>
+      <td>
+        {# rate coefficient #}
       </td>
      </tr>
-     <tr class="{{ reaction.family|replace(',','') }}">
+     <tr class="{{ reaction.family|slugify }}">
       <td></td>
       <td colspan="4" class="reactionComment">
       {{ reaction.comment }}
@@ -131,17 +91,6 @@
      </tr>
     {% endfor %}
     </table>
-        {% endif %}
-      </td>
-     </tr>
-     <tr class="{{ reaction.family|replace(',','') }}">
-      <td></td>
-      <td colspan="4" class="reactionComment">
-      {{ reaction.comment }}
-      </td>
-     </tr>
-    {% endfor %}
-    </table>
-    
+
 
 {% endblock %}

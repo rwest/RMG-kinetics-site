@@ -8,8 +8,8 @@ urlpatterns = patterns('RMG_site.visualizer.views',
     (r'^mechanisms/(?P<mechanism_id>[^/]+)/cti2db/$',    'cti2db'),
     (r'^mechanisms/(?P<mechanism_id>[^/]+)/draw_species/$', 'draw_species'),
     (r'^mechanisms/(?P<mechanism_id>[^/]+)/reactions/$',    'reactions'),
-    (r'^mechanisms/(?P<mechanism_id>[^/]+)/reactions/(?P<reaction_id>\d+)$', 'reaction'),
-    
+    (r'^mechanisms/(?P<mechanism_id>[^/]+)/reactions/(?P<reaction_number>\d+)$', 'reaction'),
+    (r'^mechanisms/(?P<mechanism_id>[^/]+)/species/(?P<species_number>\d+)$', 'species'),
 
     # Example:
     # (r'^mysite/', include('mysite.foo.urls')),

@@ -59,5 +59,9 @@ def reactions(request, mechanism_id):
 
     return HttpResponse("You're looking at the reactions of mechanism %s. %s" % (mechanism_name, reactions ))
 
-def reaction(request, mechanism_name, reaction_id):
-    return HttpResponse("You're editing reaction %s of mechanism %s." % (reaction_id,mechanism_name))
+def reaction(request, mechanism_id, reaction_number):
+    return HttpResponse("You're editing reaction %s of mechanism %s." % (reaction_number,mechanism_name))
+    
+def species(request, mechanism_id, species_number):
+    return HttpResponse("You're editing reaction %s of mechanism %s." % (species_number,mechanism_name))
+    

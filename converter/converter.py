@@ -23,7 +23,7 @@ def convert_chemkin_to_cantera(mechanism):
     starting_dir = os.getcwd()
     mechanism_dir, infile = os.path.split(mechanism.chemkin_file.name)
     cantera_filename = os.path.splitext(infile)[0]+'.cti'
-    full_mechanism_dir = os.path.realpath(os.path.join(settings.MEDIA_ROOT, mechanism_dir))
+    full_mechanism_dir = os.path.realpath(mechanism.get_directory_path() )
     os.chdir(full_mechanism_dir)
     if os.path.exists('ck2cti-validation-failed.log'): os.remove('ck2cti-validation-failed.log')
 

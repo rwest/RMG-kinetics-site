@@ -1,10 +1,10 @@
-body {
-    background-color: #ffffff;
+/*body {
+   background-color: #ffffff;
     color: #111;
     font-size: 12px;
     font-family: Verdana, Arial, SunSans-Regular, Sans-Serif;
 }
-
+*/
 table.reactionList {
     border-collapse: collapse;
     font-size: 16px;
@@ -20,6 +20,11 @@ tr.reactionRow td{
 .residuals {
     font-size: 10px;
     float:left;
+}
+
+.unidentified {
+    font-size: larger;
+    font-weight: bold;
 }
 
 table.groupList {

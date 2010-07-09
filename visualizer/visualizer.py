@@ -125,9 +125,10 @@ def draw_species(mechanism):
         # add species to the django database
         try: # check if it's already there
             S = Species.objects.get(mechanism=mechanism, name=name)
-        except Species.DoesNotExist:
+        except Species.DoesNotExist: # else create it with number=0 because we don't know what position it has in the chemkin file
             S = Species(mechanism=mechanism, name=name, number=0)
         S.smiles = smiles
+        S.identified = True
         S.save()
     
     masses.close()
@@ -350,7 +351,7 @@ def convert_cantera_to_database(mechanism):
 
     # add species to the django database
     for i,s in enumerate(ctml_writer._species):
-        try: # check if it's already there
+        try: # check if it's already there. see http://docs.djangoproject.com/en/dev/ref/models/querysets/#get-or-create-kwargs
             S = Species.objects.get(mechanism=mechanism, name=s._name)
         except Species.DoesNotExist:
             S = Species(mechanism=mechanism, name=s._name)
